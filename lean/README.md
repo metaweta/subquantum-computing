@@ -15,6 +15,18 @@ principles.
   by induction on `k` (Eq. (eq:doubleexp)).
 - `Subquantum.KL` — expansion of binary KL divergence `d(c ‖ p_*)`
   isolating the `c · n · log 2` term underwriting the `Ω(n)` lower bound.
+- `Subquantum.ErrorTransparent` — the operator-algebraic derivations of
+  the error-transparent interface (Section 6):
+  - `logicalMarker_intertwine`: from Knill–Laflamme orthogonality
+    `V_b† · V_a = δ_{ab} P_C` and `Q_L · P_C = Q_L`, derives Eq.
+    (eq:intertwine): `Q̃_L · V_a = V_a · Q_L`.
+  - `pow_mul_of_intertwine` and `transparent_pow`: the polynomial
+    content of Eq. (eq:transparentidentity),
+    `(Q̃_L · p_y)^n · V_a = V_a · (Q_L · p_y)^n` for every `n`, by
+    induction. The exponential form `exp(z Q̃_L p_y) · V_a =
+    V_a · exp(z Q_L p_y)` follows by pulling the right-multiplication
+    through the exponential's `tsum`; that normed-algebra step is left
+    to future work.
 - `Subquantum.FaultTolerance` — the arithmetic core of the
   Fault-tolerance theorem (Section 7):
   - `failureUpperBound_le_delta`: given the concatenation recursion
@@ -39,9 +51,13 @@ formalized and enters `FaultTolerance.lean` only as hypotheses:
 - **Union bound (A4)** `Pr_μ(B_k) ≤ L(n) · q_k`: representing fault
   events as macroscopic configuration-space records with equilibrium
   measures equal to Born probabilities is axiomatic input.
-- **Error-transparent intertwining identity** (Eqs.
-  (eq:intertwine), (eq:transparentidentity)) and the syndrome-only
-  transparency class are not formalized.
+- **Exponential form of (eq:transparentidentity)**:
+  `exp(z Q̃_L p_y) · V_a = V_a · exp(z Q_L p_y)`. The polynomial content
+  is proved (see `Subquantum.ErrorTransparent`), but promoting it to
+  the exponential form requires a normed-algebra setting and continuity
+  of right-multiplication through a `tsum`, which is not formalized here.
+  The **syndrome-only transparency class** (Eq. (eq:syndromeonly)) is also
+  not formalized.
 - **Pilot-wave dynamics** in 1D and the cumulative-Born-probability
   conservation along trajectories.
 - **Monotonicity lift** from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`.
@@ -67,5 +83,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6336 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6338 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.
