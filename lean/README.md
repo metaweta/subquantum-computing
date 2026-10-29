@@ -32,6 +32,18 @@ principles.
     `HasSum (fun n => (n!)⁻¹ · x^n) (exp x)` term-by-term and passing
     multiplication by `V` through via `HasSum.mul_right`/`mul_left`.
     Requires a complete normed ℝ-algebra.
+- `Subquantum.SyndromeOnly` — the syndrome-only transparency class of
+  Eq. (eq:syndromeonly):
+  - `commute_of_syndromeOnly_codeOnly`: in the tensor-product model
+    `H₁ ⊗ H₂`, operators of form `id ⊗ s` (syndrome-only) commute with
+    operators of form `Q ⊗ id` (code-only), since both compositions
+    equal `Q ⊗ s`. Uses `LinearMap.lTensor_comp_rTensor` and
+    `LinearMap.rTensor_comp_lTensor` from mathlib.
+  - `commute_of_transparent_encoded`: pulling back through an isometry
+    `W : K ≃ₗ[𝕜] H₁ ⊗ H₂`, any transparent operator (`WSW† = I_L ⊗ s`)
+    commutes with any encoded-pointer operator (`WQ̃_LW† = Q_L ⊗ I_syn`)
+    on the full physical space `K`. This is the manuscript's statement
+    in Section 6.
 - `Subquantum.FaultTolerance` — the arithmetic core of the
   Fault-tolerance theorem (Section 7):
   - `failureUpperBound_le_delta`: given the concatenation recursion
@@ -56,10 +68,6 @@ formalized and enters `FaultTolerance.lean` only as hypotheses:
 - **Union bound (A4)** `Pr_μ(B_k) ≤ L(n) · q_k`: representing fault
   events as macroscopic configuration-space records with equilibrium
   measures equal to Born probabilities is axiomatic input.
-- **Syndrome-only transparency class** (Eq. (eq:syndromeonly)): the
-  requirement `WSW† = I_L ⊗ s` for a fault operator to be transparent is
-  not formalized. (This is the characterization of the transparent class
-  itself, not the identity it enjoys.)
 - **Pilot-wave dynamics** in 1D and the cumulative-Born-probability
   conservation along trajectories.
 - **Monotonicity lift** from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`.
@@ -85,5 +93,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6378 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6380 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.
