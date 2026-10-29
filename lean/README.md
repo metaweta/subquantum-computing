@@ -23,10 +23,15 @@ principles.
   - `pow_mul_of_intertwine` and `transparent_pow`: the polynomial
     content of Eq. (eq:transparentidentity),
     `(Q̃_L · p_y)^n · V_a = V_a · (Q_L · p_y)^n` for every `n`, by
-    induction. The exponential form `exp(z Q̃_L p_y) · V_a =
-    V_a · exp(z Q_L p_y)` follows by pulling the right-multiplication
-    through the exponential's `tsum`; that normed-algebra step is left
-    to future work.
+    induction.
+- `Subquantum.ExpTransparent` — the exponential form of Eq.
+  (eq:transparentidentity):
+  - `exp_mul_of_intertwine`: `exp(X · p) · V = V · exp(Y · p)` under
+    the hypotheses `X · V = V · Y` (intertwining) and `p · V = V · p`
+    (pointer commutes with code-register ops). Proved by applying the
+    `HasSum (fun n => (n!)⁻¹ · x^n) (exp x)` term-by-term and passing
+    multiplication by `V` through via `HasSum.mul_right`/`mul_left`.
+    Requires a complete normed ℝ-algebra.
 - `Subquantum.FaultTolerance` — the arithmetic core of the
   Fault-tolerance theorem (Section 7):
   - `failureUpperBound_le_delta`: given the concatenation recursion
@@ -51,13 +56,10 @@ formalized and enters `FaultTolerance.lean` only as hypotheses:
 - **Union bound (A4)** `Pr_μ(B_k) ≤ L(n) · q_k`: representing fault
   events as macroscopic configuration-space records with equilibrium
   measures equal to Born probabilities is axiomatic input.
-- **Exponential form of (eq:transparentidentity)**:
-  `exp(z Q̃_L p_y) · V_a = V_a · exp(z Q_L p_y)`. The polynomial content
-  is proved (see `Subquantum.ErrorTransparent`), but promoting it to
-  the exponential form requires a normed-algebra setting and continuity
-  of right-multiplication through a `tsum`, which is not formalized here.
-  The **syndrome-only transparency class** (Eq. (eq:syndromeonly)) is also
-  not formalized.
+- **Syndrome-only transparency class** (Eq. (eq:syndromeonly)): the
+  requirement `WSW† = I_L ⊗ s` for a fault operator to be transparent is
+  not formalized. (This is the characterization of the transparent class
+  itself, not the identity it enjoys.)
 - **Pilot-wave dynamics** in 1D and the cumulative-Born-probability
   conservation along trajectories.
 - **Monotonicity lift** from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`.
@@ -83,5 +85,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6338 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6378 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.

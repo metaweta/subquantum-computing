@@ -2,4 +2,5 @@ import Subquantum.Entropy
 import Subquantum.Concatenation
 import Subquantum.KL
 import Subquantum.ErrorTransparent
+import Subquantum.ExpTransparent
 import Subquantum.FaultTolerance
