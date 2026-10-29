@@ -1,0 +1,22 @@
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.xdv
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# OS/editor
+.DS_Store
+*~
+.vscode/
+.idea/

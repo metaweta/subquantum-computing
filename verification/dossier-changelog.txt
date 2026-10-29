@@ -1,0 +1,14 @@
+Version 2.0 - 8 October 2026
+
+Updated against Foundations_of_Physics_submission_Stay_SN_revised_ready.zip.
+
+Major updates:
+- Converts the old defect list into a revision audit showing how each issue was repaired.
+- Verifies the corrected rare-set lemma with its exact hypotheses and monotonicity proof.
+- Separates the design probability p* from the actual marked-state weight p_f.
+- Adds the five-qubit [[5,1,3]] perfect-code syndrome decomposition and source audit.
+- Defines the error-transparent projector on the full physical Hilbert space.
+- Separates one-fault transparency, syndrome-only sequential transparency, and nontransparent histories.
+- Incorporates the complete L(n)-location circuit, union bound, likelihood-ratio amplification, and revised k bound.
+- Expands the randomized Valiant-Vazirani decision consequence and SAT self-reduction.
+- Updates the final amber-readiness sign-off, equation dependency map, arithmetic-check code, and revision crosswalk.

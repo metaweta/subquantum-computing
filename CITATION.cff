@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this research draft, please cite the version or commit hash you consulted."
+title: "Linear Nonequilibrium Information Suffices for Fault-Tolerant Subquantum Search"
+type: article
+authors:
+  - family-names: Stay
+    given-names: Michael A.
+    affiliation: "Computer Science Department, University of Auckland"
+    email: mike@cs.auckland.ac.nz
+version: 0.1.0
+date-released: 2026-10-29
+abstract: >-
+  A conditional resource analysis of unique-witness search using nonequilibrium
+  de Broglie–Bohm pointers and a syndrome-resolved error-transparent interface.
+  The draft derives a linear relative-entropy nonequilibrium cost and polynomial
+  fault-tolerance overhead under explicitly stated assumptions.
+keywords:
+  - de Broglie-Bohm theory
+  - quantum nonequilibrium
+  - subquantum computation
+  - quantum error correction
+  - fault tolerance
+  - computational complexity
+preferred-citation:
+  type: article
+  title: "Linear Nonequilibrium Information Suffices for Fault-Tolerant Subquantum Search"
+  authors:
+    - family-names: Stay
+      given-names: Michael A.
+  year: 2026

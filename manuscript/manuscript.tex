@@ -1,0 +1,452 @@
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+\hypersetup{
+  pdftitle={Linear Nonequilibrium Information Suffices for Fault-Tolerant Subquantum Search},
+  pdfauthor={Michael A. Stay},
+  pdfsubject={Foundations of Physics submission},
+  pdfkeywords={de Broglie-Bohm theory, quantum nonequilibrium, subquantum computation, quantum error correction, fault tolerance, computational complexity}
+}
+
+\raggedbottom
+\setcounter{secnumdepth}{3}
+
+\theoremstyle{thmstyleone}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\begin{document}
+
+\title[Fault-Tolerant Subquantum Search]{Linear Nonequilibrium Information Suffices for Fault-Tolerant Subquantum Search}
+
+\author*[1]{\fnm{Michael A.} \sur{Stay}}\email{mike@cs.auckland.ac.nz}
+
+\affil*[1]{\orgdiv{Computer Science Department}, \orgname{University of Auckland},
+\orgaddress{\city{Auckland}, \country{New Zealand}}}
+
+\abstract{
+Valentini has proposed that nonequilibrium de Broglie--Bohm systems could enable ``subquantum'' computation, while leaving open how the required nonequilibrium resources scale with input size. For an $n$-bit zero-versus-one-witness problem, let $p_*=2^{-n}$. The initial uniform superposition already contains every candidate basis component; a reversible verifier marks the witness component, if one exists, so the actual marked-state weight is either $0$ or $p_*$. We show that a one-dimensional nonequilibrium pointer prepared using the design value $p_*$ selects the marked outcome with unit probability on a unique-witness instance and never selects it on an ideal no-witness instance. The required relative entropy is $R=\ln(4/p_*)=n\ln2+O(1)$, and a corrected data-processing bound gives a matching $\Omega(n)$ lower bound for constant-probability selection. For noise, we define an error-transparent logical projector on the direct sum of correctable syndrome sectors and extend it by zero outside that subspace. Histories that remain in this subspace and act only on the syndrome have exactly the ideal pointer translation; all other histories are counted as nontransparent. For a complete $L(n)=\operatorname{poly}(n)$-location circuit with concatenated per-location error satisfying $q_{j+1}\le Aq_j^2$, a union bound and the nonequilibrium likelihood-ratio bound show that $O(\log n)$ concatenation levels suffice. Thus the total overhead remains polynomial under the stated syndrome-resolved fault model. Most exploratory derivations and manuscript drafting were carried out interactively with OpenAI ChatGPT (GPT-5.6 Sol), under the author's direction and critical review.
+}
+
+\keywords{de Broglie--Bohm theory, quantum nonequilibrium, subquantum computation, quantum error correction, fault tolerance, computational complexity}
+
+\maketitle
+
+\section{Introduction}
+
+In de Broglie--Bohm pilot-wave theory the wave function obeys the Schr\"odinger equation while the configuration follows a deterministic guidance law. Quantum equilibrium corresponds to an ensemble density $\rho(q,t)=|\psi(q,t)|^2$, but the dynamics also permits nonequilibrium ensembles with $\rho\neq |\psi|^2$ \cite{Valentini1991,Valentini2025}. Valentini has emphasized that such ensembles would have operational capabilities absent in ordinary quantum mechanics, including subquantum measurements and discrimination of nonorthogonal states, and proposed that these resources could be used computationally \cite{Valentini2002}.
+
+A recent review makes the missing complexity question explicit: to assess the power of subquantum computation, one must quantify whether the required nonequilibrium resources grow polynomially or exponentially with the size of the computational task \cite{Valentini2025}. We answer a precise version of that question.
+
+The setting is a promise problem with zero or one accepting witness. Write $p_*=2^{-n}$ for the design weight associated with one basis state in the uniform superposition. The superposition already contains every candidate component. A reversible verifier marks the unique witness, when one exists, by correlating its component with a logical flag. Thus the actual marked-state weight is $p_f\in\{0,p_*\}$, rather than a branch being created by the verifier. We prepare a nonequilibrium pointer entirely inside the Bohmian basin leading to the marked outcome when $p_f=p_*$. With relative entropy from quantum equilibrium as the additive resource measure, the resulting cost is linear in $n$ and is optimal up to an additive constant.
+
+The second part treats noise. The exponentially small marked weight means that a naive physical interface would be vulnerable to spurious logical population. We therefore combine the pilot-wave pointer with a fixed-size error-transparent logical measurement and syndrome-resolved quantum fault tolerance. At the base interface, a precisely defined class of transparent histories produces exactly the same pointer dynamics as the noiseless measurement. We do not claim this for arbitrary products of individually correctable physical errors; histories that leave the transparent syndrome subspace are included in the logical failure rate. For a complete logical computation containing $L(n)=\operatorname{poly}(n)$ locations, the standard concatenated-code recursion suppresses the probability of any nontransparent location sufficiently with $O(\log n)$ levels of concatenation.
+
+Valiant and Vazirani showed that SAT is as hard, under randomized polynomial-time reductions, as distinguishing formulas with no satisfying assignment from formulas with exactly one \cite{ValiantVazirani1986}. A bounded-error polynomial-time solver for the promise problem considered here would therefore yield, after amplification and repeated isolation, a randomized polynomial-time decision procedure for SAT using the same subquantum primitive. A witness could then be recovered by the standard self-reduction of SAT. The complexity consequence is thus randomized, not a deterministic collapse.
+
+\section{Nonequilibrium as an additive information resource}
+
+Let
+\begin{equation}
+\mu(q)=|\psi(q)|^2
+\end{equation}
+be the equilibrium measure and let $\rho(q)$ be an actual nonequilibrium ensemble density with $\rho\ll\mu$. Define
+\begin{equation}
+R(\rho\|\mu)
+=\int dq\,\rho(q)\ln\frac{\rho(q)}{\mu(q)}.
+\label{eq:resource}
+\end{equation}
+This is the relative entropy of $\rho$ with respect to $\mu$. It is nonnegative and additive for independent systems. In pilot-wave dynamics, $\rho$ and $|\psi|^2$ obey continuity equations generated by the same velocity field, so the ratio $\rho/|\psi|^2$ is conserved along trajectories \cite{Valentini1991,Valentini2025}. Consequently the fine-grained quantity in Eq.~\eqref{eq:resource} is invariant under exact reversible pilot-wave evolution.
+
+The same quantity gives a lower bound on selection of a small equilibrium set.
+
+\begin{lemma}[Rare-set lower bound]
+Let $B$ be a measurable configuration-space event with equilibrium probability $\mu(B)=p$, and let $r=\rho(B)$. If
+\begin{equation}
+0<p<c\le 1,
+\qquad r\ge c,
+\end{equation}
+then
+\begin{equation}
+R(\rho\|\mu)\ge
+c\ln\frac{c}{p}+(1-c)\ln\frac{1-c}{1-p},
+\label{eq:binarylower}
+\end{equation}
+where the second term is understood as zero when $c=1$. For fixed $c>0$ and $p\rightarrow0$, the right-hand side is $\Omega(\ln(1/p))$.
+\end{lemma}
+
+\begin{proof}
+Coarse-grain configuration space to the binary random variable specifying membership in $B$. The data-processing inequality gives
+\begin{equation}
+R(\rho\|\mu)\ge d(r\|p),
+\end{equation}
+where
+\begin{equation}
+d(r\|p)=r\ln\frac{r}{p}+(1-r)\ln\frac{1-r}{1-p}.
+\end{equation}
+For $r\in(p,1)$,
+\begin{equation}
+\frac{\partial}{\partial r}d(r\|p)
+=\ln\frac{r(1-p)}{p(1-r)}>0.
+\end{equation}
+Because $r\ge c>p$, monotonicity (with the endpoint obtained by continuity when $c=1$) gives $d(r\|p)\ge d(c\|p)$, which is Eq.~\eqref{eq:binarylower}. For fixed $c$,
+\begin{equation}
+d(c\|p)=c\ln\frac1p+O(1)
+\end{equation}
+as $p\rightarrow0$.
+\end{proof}
+
+In particular, assigning fixed positive probability to an outcome basin whose equilibrium measure is $2^{-n}$ requires $\Omega(n)$ additive nonequilibrium information in this resource measure.
+
+\section{Unique-witness computation as marked-state selection}
+
+Let $f:\{0,1\}^n\to\{0,1\}$ be computable by a polynomial-size reversible verifier, with the promise that either no input satisfies $f$ or exactly one input does. Let $w\in\{0,1\}$ be the number of witnesses and define
+\begin{equation}
+p_*=2^{-n},
+\qquad
+p_f=w p_*.
+\label{eq:designactual}
+\end{equation}
+Prepare
+\begin{equation}
+|\Psi_f\rangle
+=\frac{1}{\sqrt{2^n}}\sum_{x\in\{0,1\}^n}|x\rangle|f(x)\rangle.
+\label{eq:verifierstate}
+\end{equation}
+Let $Q=I\otimes|1\rangle\langle1|$ project onto the marked subspace. Then
+\begin{equation}
+\langle\Psi_f|Q|\Psi_f\rangle=p_f
+=\begin{cases}
+0,&\text{no witness},\\[3pt]
+p_*,&\text{one witness}.
+\end{cases}
+\label{eq:pweight}
+\end{equation}
+
+Couple the flag to a one-dimensional pointer coordinate $y$ with initial packet $g(y)$ using a von Neumann interaction of the form proposed for subquantum measurement by Valentini \cite{Valentini2002,Valentini2025},
+\begin{equation}
+H_M(t)=a(t)Qp_y.
+\label{eq:measurementH}
+\end{equation}
+Let
+\begin{equation}
+G(t)=\int_0^t a(s)\,ds.
+\end{equation}
+When $p_f>0$, write the unmarked component and the marked state as orthogonal normalized states $|\Phi_0\rangle$ and $|\Phi_1\rangle$. When $p_f=0$, the second term below is simply absent. In either case the joint state can be written as
+\begin{equation}
+|\Psi(t)\rangle
+=\sqrt{1-p_f}\,|\Phi_0\rangle g(y)
++e^{i\varphi}\sqrt{p_f}\,|\Phi_1\rangle g(y-G(t)).
+\label{eq:pointerstate}
+\end{equation}
+Let $\mu_y(y)=|g(y)|^2$. Orthogonality gives the pointer density
+\begin{equation}
+P(y,t)=(1-p_f)\mu_y(y)+p_f\mu_y(y-G(t))
+\end{equation}
+and current
+\begin{equation}
+J(y,t)=\dot G(t)p_f\mu_y(y-G(t)).
+\end{equation}
+The Bohmian pointer velocity is $\dot y=J/P$ wherever $P>0$.
+
+Define the cumulative equilibrium probability
+\begin{equation}
+C(y,t)=\int_{-\infty}^{y}P(z,t)\,dz.
+\end{equation}
+Assuming the current vanishes at $-\infty$, the continuity equation gives $\partial_tC=-J$. Therefore a Bohmian trajectory $Y(t)$ satisfies
+\begin{equation}
+\frac{d}{dt}C(Y(t),t)
+=\partial_tC+\dot Y\,\partial_yC
+=-J+\frac{J}{P}P=0.
+\label{eq:cumulativeconservation}
+\end{equation}
+Thus the cumulative Born probability associated with the actual pointer position,
+\begin{equation}
+u=C(Y(t),t),
+\end{equation}
+is exactly conserved.
+
+Choose the total displacement so that the two final pointer packets are disjoint and the marked-state packet lies to the right. On a unique-witness instance its total Born weight is $p_*$, so its initial Bohmian basin is precisely
+\begin{equation}
+u>1-p_*.
+\label{eq:basin}
+\end{equation}
+On a no-witness instance $p_f=0$, the current vanishes and no marked-state packet exists. The same pointer preparation can therefore distinguish the two promised cases.
+
+\section{Optimal linear nonequilibrium cost}
+
+Use the design value $p_*=2^{-n}$ independently of which promised case is supplied. Let $u=C(y,0)$ denote the initial cumulative Born probability and define
+\begin{equation}
+A_*=
+\left\{y:1-\frac{p_*}{2}<u<1-\frac{p_*}{4}\right\}.
+\label{eq:shell}
+\end{equation}
+Its equilibrium probability is
+\begin{equation}
+\mu_y(A_*)=\frac{p_*}{4}.
+\end{equation}
+Every point of $A_*$ satisfies $u>1-p_*$. Hence every trajectory starting in $A_*$ enters the marked-state packet on a unique-witness instance. On a no-witness instance the packet is absent and the pointer remains in the unshifted outcome.
+
+Condition equilibrium on $A_*$:
+\begin{equation}
+\rho_{A_*}(y)=\frac{4}{p_*}\mu_y(y)\mathbf 1_{A_*}(y).
+\label{eq:conditioned}
+\end{equation}
+The resource cost is
+\begin{equation}
+R(\rho_{A_*}\|\mu_y)
+=\ln\frac{4}{p_*}
+=n\ln2+\ln4.
+\label{eq:linearresource}
+\end{equation}
+Lemma 1, applied to the marked-state basin with any fixed target success probability $c>0$ and sufficiently large $n$ so that $p_*<c$, gives the matching lower bound. Thus the additive nonequilibrium cost of constant-probability selection of a marked state with weight $2^{-n}$ is
+\begin{equation}
+R=\Theta(n).
+\end{equation}
+
+The exponentially small equilibrium probability need not imply exponentially fine spatial localization. For example, choose a family of compactly supported pointer packets whose survival probability is proportional to $e^{-y/L}$ over an interval of length $\Theta(n)$, with a smooth cutoff near the endpoints. Changing the tail probability by a constant multiplicative factor then changes $y$ by only $O(1)$. The shell in Eq.~\eqref{eq:shell} has $O(1)$ physical width, while the packet support and a displacement sufficient to separate the two outcomes have width $O(n)$. With bounded interaction strength, that displacement can be implemented by $O(n)$ elementary interface segments; these segments are included in the circuit size $L(n)$ below. Thus the factor $2^{-n}$ need not reappear as an exponential spatial-precision or control-time requirement.
+
+\section{An error-transparent encoded pointer interface}
+
+The construction above is vulnerable if ordinary physical errors generate a spurious marked-state population. We therefore couple the pointer to an encoded logical flag through an error-transparent observable and state explicitly where that observable acts.
+
+For concreteness, take the nondegenerate five-qubit perfect code $[[5,1,3]]$, which corrects an arbitrary error on one physical qubit \cite{Laflamme1996}. The same construction works for any fixed nondegenerate distance-three subspace code. Let $\mathcal C$ be its two-dimensional code space and let $P_{\mathcal C}$ be the code projector. Let $E_0=I$ and let $E_1,\ldots,E_{15}$ be the fifteen single-qubit Pauli errors. Nondegeneracy and distance three give
+\begin{equation}
+P_{\mathcal C}E_a^\dagger E_bP_{\mathcal C}
+=\delta_{ab}P_{\mathcal C}.
+\label{eq:KLorthogonal}
+\end{equation}
+Define the partial isometries
+\begin{equation}
+V_a=E_aP_{\mathcal C}.
+\end{equation}
+Their ranges $\mathcal C_a=V_a\mathcal C$ are mutually orthogonal syndrome sectors. Define
+\begin{equation}
+\mathcal K=\bigoplus_{a=0}^{15}\mathcal C_a,
+\qquad
+P_{\mathcal K}=\sum_{a=0}^{15}V_aV_a^\dagger.
+\end{equation}
+For the perfect five-qubit code, $16\dim\mathcal C=32$, so $\mathcal K$ is the full five-qubit Hilbert space. For a nonperfect fixed code the formulas below define the operator on $\mathcal K$, and we take it to vanish on $\mathcal K^\perp$.
+
+Let
+\begin{equation}
+Q_L=|1_L\rangle\langle1_L|
+\end{equation}
+be the logical marked-state projector on $\mathcal C$. Define the full-system operator
+\begin{equation}
+\widetilde Q_L
+=\sum_{a=0}^{15} V_aQ_LV_a^\dagger.
+\label{eq:Qtilde}
+\end{equation}
+Equation~\eqref{eq:Qtilde} defines $\widetilde Q_L$ on the full physical system Hilbert space. For the five-qubit code the syndrome sectors already exhaust that space; in the general fixed-code version it acts as zero on $\mathcal K^\perp$. From Eq.~\eqref{eq:KLorthogonal},
+\begin{equation}
+\widetilde Q_L^\dagger=\widetilde Q_L,
+\qquad
+\widetilde Q_L^2=\widetilde Q_L,
+\end{equation}
+so it is a bounded self-adjoint projector. It also satisfies the intertwining relation
+\begin{equation}
+\widetilde Q_LV_a=V_aQ_L.
+\label{eq:intertwine}
+\end{equation}
+The pointer Hamiltonian
+\begin{equation}
+H_{\mathrm{ET}}(t)=a(t)\widetilde Q_Lp_y
+\label{eq:ETH}
+\end{equation}
+is therefore self-adjoint on the natural domain of $p_y$. This is the measurement analogue of error-transparent evolution: the logical operation is replicated in every included syndrome sector \cite{VyWangJacobs2013}.
+
+Let
+\begin{equation}
+U(t_2,t_1)=
+\exp\!\left[-i\bigl(G(t_2)-G(t_1)\bigr)\widetilde Q_Lp_y\right].
+\end{equation}
+If one Pauli-basis fault $E_a$ occurs at time $t$ while the state was previously in the code sector, Eq.~\eqref{eq:intertwine} gives
+\begin{equation}
+U(T,t)E_aU(t,0)P_{\mathcal C}
+=E_a e^{-iG(T)Q_Lp_y}P_{\mathcal C}.
+\label{eq:transparentidentity}
+\end{equation}
+Thus the final pointer translation is exactly the ideal logical translation, independent of the identity or timing of this fault. Every operator acting on one physical qubit is a linear combination of the Pauli basis, so by linearity the same identity holds for an arbitrary one-qubit fault until syndrome resolution.
+
+There is also a useful sequential statement. Define an isometry
+\begin{equation}
+W:\mathcal K\longrightarrow \mathcal C\otimes\mathcal H_{\mathrm{syn}},
+\qquad
+WV_a|\psi_L\rangle=|\psi_L\rangle\otimes|a\rangle.
+\end{equation}
+Then
+\begin{equation}
+W\widetilde Q_LW^\dagger=Q_L\otimes I_{\mathrm{syn}}.
+\end{equation}
+Consequently, any fault operator $S$ that preserves $\mathcal K$ and obeys
+\begin{equation}
+WSW^\dagger=I_L\otimes s
+\label{eq:syndromeonly}
+\end{equation}
+commutes with the encoded pointer evolution on $\mathcal K$. Any sequence of such faults at arbitrary times can be moved through the intervening pointer evolutions, so the total pointer translation remains ideal. We call such a history \emph{transparent}. The base gadget includes the no-fault history and every one-qubit fault history covered by Eq.~\eqref{eq:transparentidentity}. We do not assume that an arbitrary multi-fault history remains in $\mathcal K$ or satisfies Eq.~\eqref{eq:syndromeonly}; any history that does not is classified as nontransparent.
+
+Syndrome extraction records which included sector is occupied without learning the logical value. This is the information-theoretic content of the Knill--Laflamme condition: within the correctable error algebra, the syndrome factor is independent of the encoded state \cite{KnillLaflamme1997}. Measurements of stabilizer syndromes also decohere coherent local error components toward stochastic Pauli-like logical noise \cite{Beale2018}.
+
+The interface in Eq.~\eqref{eq:ETH} is a fixed-size primitive. Error-transparent evolution generally requires higher-body interactions, but for a fixed base code that body-ness is a constant independent of $n$ \cite{VyWangJacobs2013}. The theorem below treats this base interface as a constant-complexity component and studies its asymptotic concatenation overhead.
+
+\section{Fault-tolerance theorem}
+
+The following assumptions make explicit what is meant by a fault-tolerant subquantum computation.
+
+\begin{enumerate}
+\renewcommand{\labelenumi}{(A\arabic{enumi})}
+\item The ideal encoded computation, including state preparation, the reversible verifier, transfer of the output flag into the readout code, and any bounded-strength segmentation of the logical pointer displacement, contains $L(n)=\operatorname{poly}(n)$ logical locations. On the promised inputs it produces marked-state weight $p_f\in\{0,p_*\}$ with $p_*=2^{-n}$.
+\item The base pointer interface is Eq.~\eqref{eq:ETH}. A specified set of syndrome-resolved base histories is transparent in the sense of Eq.~\eqref{eq:syndromeonly}; it includes the no-fault history and every one-qubit fault history covered by Eq.~\eqref{eq:transparentidentity}. Histories outside this set are nontransparent; in particular, pointer faults, correlated control faults, and interface faults not satisfying the syndrome-only condition contribute to $q_0$.
+\item At concatenation level $j$, let $q_j$ upper-bound the equilibrium probability that a given logical extended rectangle is incorrect or nontransparent. Below threshold, the standard distance-three recursion holds:
+\begin{equation}
+q_{j+1}\le A q_j^2,
+\label{eq:recursion}
+\end{equation}
+for some constant $A$ with $\theta=Aq_0<1$ \cite{AliferisGottesmanPreskill2006}. A complete history with no incorrect or nontransparent logical location implements the ideal logical computation and a transparent readout.
+\item The syndrome-resolved histories and logical-location failure events are represented by macroscopic configuration-space records whose equilibrium measures are their Born probabilities. This permits ordinary probability bounds, including a union bound over the $L(n)$ locations. The assumption excludes a general unsyndromed coherent bath with interfering fault paths.
+\end{enumerate}
+
+\begin{theorem}[Fault-tolerant marked-state selection]
+Under assumptions (A1)--(A4), an $n$-bit zero-versus-one-witness instance can be distinguished with failure probability at most any fixed $\delta\in(0,1)$ using nonequilibrium relative entropy $n\ln2+O(1)$ and polynomial total fault-tolerance overhead. No elementary physical error rate need decrease with $n$.
+\end{theorem}
+
+\begin{proof}
+Let $p_*=2^{-n}$. Let $q$ denote the full initial configuration, including computer, syndrome apparatus, environment included in the fault model, and pointer, and let $\mu_0(q)$ be its equilibrium density. Condition the full equilibrium ensemble on the pointer event $A_*$ from Eq.~\eqref{eq:shell}:
+\begin{equation}
+\rho_0(q)=\frac4{p_*}\mathbf 1_{A_*}(y(q))\mu_0(q).
+\label{eq:fullconditioned}
+\end{equation}
+Because the equilibrium marginal probability of $A_*$ is $p_*/4$, Eq.~\eqref{eq:fullconditioned} is normalized and
+\begin{equation}
+R(\rho_0\|\mu_0)=\ln\frac4{p_*}.
+\end{equation}
+Moreover,
+\begin{equation}
+0\le\frac{\rho_0}{\mu_0}\le\frac4{p_*}.
+\label{eq:ratioBound}
+\end{equation}
+Because the ratio $\rho/|\Psi|^2$ is transported unchanged along the full pilot-wave flow, the same essential-supremum bound holds at all later times. Hence, for every later configuration-space event $B$,
+\begin{equation}
+\Pr_{\rho}(B)
+\le\frac4{p_*}\Pr_{\mu}(B).
+\label{eq:eventBound}
+\end{equation}
+
+Let $B_k$ be the event that at least one of the $L(n)$ logical locations is incorrect or nontransparent at concatenation level $k$. By assumptions (A3) and (A4), the union bound gives
+\begin{equation}
+\Pr_{\mu}(B_k)\le L(n)q_k.
+\label{eq:union}
+\end{equation}
+On the complement of $B_k$, the logical computation is ideal. In the unique-witness case the pointer starts in the basin $u>1-p_*$ and enters the marked-state packet; in the no-witness case the marked packet is absent. Thus only $B_k$ can cause failure, and Eqs.~\eqref{eq:eventBound} and \eqref{eq:union} give
+\begin{equation}
+\Pr_{\rho}(\mathrm{failure})
+\le\frac{4L(n)q_k}{p_*}.
+\label{eq:neqbad}
+\end{equation}
+
+Iterating Eq.~\eqref{eq:recursion} with $\theta=Aq_0<1$ yields
+\begin{equation}
+q_k\le\frac1A\theta^{2^k}.
+\label{eq:doubleexp}
+\end{equation}
+To make Eq.~\eqref{eq:neqbad} at most $\delta$, it suffices that
+\begin{equation}
+q_k\le\frac{\delta p_*}{4L(n)}.
+\end{equation}
+A sufficient condition is therefore
+\begin{equation}
+2^k\ge
+\frac{n\ln2+\ln\!\left(4L(n)/(A\delta)\right)}{-\ln\theta}.
+\label{eq:kbound}
+\end{equation}
+Since $L(n)=\operatorname{poly}(n)$, the numerator is $O(n+\ln L(n))=O(n)$. Hence
+\begin{equation}
+k=O(\log n).
+\end{equation}
+If each concatenation level multiplies the implementation cost of one logical location by a fixed factor $M$, the total cost is
+\begin{equation}
+L(n)M^k=\operatorname{poly}(n).
+\end{equation}
+The nonequilibrium preparation has resource cost $n\ln2+\ln4$ from Eq.~\eqref{eq:linearresource}, while the elementary physical fault strength remains fixed below threshold.
+\end{proof}
+
+The theorem distinguishes transparent histories from merely correctable errors. A one-fault history covered by Eq.~\eqref{eq:transparentidentity}, or a syndrome-only sequence satisfying Eq.~\eqref{eq:syndromeonly}, produces exactly the ideal pointer translation. Histories for which that has not been proved are not silently treated as harmless; their contribution is included in $q_k$. This is what permits a statement about Bohmian basins without requiring a uniform pointwise bound on an arbitrary noisy velocity field.
+
+\section{Scope, limitations, and complexity consequence}
+
+Several qualifications are essential.
+
+First, Eq.~\eqref{eq:resource} is an information-theoretic resource measure. It is natural because it is additive and invariant under reversible pilot-wave transport, and because Lemma 1 supplies a matching lower bound. It does not include the unknown physical cost of producing, isolating, or maintaining nonequilibrium matter. The theorem is conditional on access to the specified pointer ensemble.
+
+Second, the fault-tolerance theorem assumes syndrome-resolved histories. General coherent system--bath noise can contain interfering fault paths that are not classical alternatives. The proof applies once the relevant correctable sectors are converted into logically opaque syndrome records, as in the stated architecture. Results on syndrome-induced decoherence of coherent errors support this regime \cite{Beale2018}, but the theorem should not be read as a statement about every microscopic bath model.
+
+Third, the error-transparent base interface is treated as a fixed-size primitive. We have defined its operator on the full system Hilbert space by taking it to vanish outside the included syndrome subspace, but we have not derived that operator from a restricted hardware Hamiltonian. Known error-transparent constructions require higher-body interactions in general \cite{VyWangJacobs2013}. Since the base code has constant size, this does not affect asymptotic complexity, but it remains a separate physical implementation problem.
+
+Fourth, the unique-witness promise and the randomized nature of the complexity consequence should be kept distinct. Valiant and Vazirani construct randomized polynomial-time isolation reductions with the following properties: if the original SAT formula is unsatisfiable, every derived formula is unsatisfiable; if it is satisfiable, a derived formula has a unique satisfying assignment with inverse-polynomial probability \cite{ValiantVazirani1986}. The promise solver may behave arbitrarily on derived formulas with more than one solution. Repeating the isolation procedure and amplifying the solver's bounded error gives a randomized polynomial-time decision procedure for SAT using the assumed subquantum primitive; with one-sided error on zero instances it gives the corresponding RP-type procedure. This is a statement about randomized polynomial time in the enlarged computational model, not a claim that ordinary BPP contains NP. Once a SAT decision procedure is available, a satisfying assignment can be recovered by the standard polynomial-time self-reduction that fixes variables one at a time. The present note establishes only the resource scaling of the zero-versus-one primitive used in this implication.
+
+\section{Conclusion}
+
+For a marked state with design weight $p_*=2^{-n}$, exponentially small equilibrium probability does not by itself imply an exponential nonequilibrium resource. Conditioning a pilot-wave pointer on an appropriate cumulative-probability shell gives deterministic marked-state selection on the unique-witness case at relative-entropy cost
+\begin{equation}
+R=n\ln2+O(1),
+\end{equation}
+and the corrected data-processing argument shows that linear scaling is optimal for constant-probability selection in this resource measure.
+
+The same conclusion survives the stated fault-tolerance model for the complete computation. The encoded pointer operator is defined on every included syndrome sector and extended by zero outside their direct sum. Transparent histories have exactly the ideal Bohmian pointer translation; all other histories are charged to the logical failure probability. For an $L(n)=\operatorname{poly}(n)$-location circuit, the nonequilibrium failure probability is bounded by $4L(n)q_k/p_*$. Standard concatenated-code suppression overcomes this $O(2^n)$ likelihood-ratio enhancement with only $O(\log n)$ levels, so total overhead remains polynomial while elementary error rates remain constant below threshold.
+
+This answers a precise version of Valentini's resource-scaling question in the polynomial direction. The principal open problems are physical: whether usable nonequilibrium can be produced and maintained, and whether the fixed-size error-transparent interface can be realized in a realistic microscopic hardware model without assumptions stronger than those used here.
+
+\section{Use of generative AI and author contributions}
+
+Most of the exploratory derivation and most of the first-draft manuscript text were produced through an extended interactive use of OpenAI ChatGPT (GPT-5.6 Sol) in September--October 2026. The model proposed and developed several intermediate constructions, including the cumulative-probability-conditioned marked-state pointer argument and the error-transparent fault-tolerance analysis, in response to the author's prompts and critiques. The human author supplied the research question, introduced the branchwise nonlinear-gate idea that motivated the search for a digital marked-state amplifier, repeatedly challenged intermediate claims, directed the successive refinements, selected the scope and claims retained here, and is the sole accountable author. ChatGPT is not listed as an author. The author takes responsibility for the accuracy, integrity, and originality of the submitted manuscript and for verification of the mathematical arguments and references.
+
+\section*{Statements and Declarations}
+
+\noindent\textbf{Funding.} No funding was received to assist with the preparation of this manuscript.
+
+\medskip
+\noindent\textbf{Competing interests.} The author declares no competing interests.
+
+\medskip
+\noindent\textbf{Data availability.} No datasets were generated or analysed during the current study.
+
+\medskip
+\noindent\textbf{Ethics approval and consent to participate.} Not applicable; this work is theoretical and involved no human participants or animals.
+
+\begin{thebibliography}{99}
+
+\bibitem{Valentini2025}
+Valentini, A.: De Broglie--Bohm quantum mechanics. In: Encyclopedia of Mathematical Physics, 2nd edn., pp. 24--41 (2025). \url{https://doi.org/10.1016/B978-0-323-95703-8.00264-0}
+
+\bibitem{Valentini1991}
+Valentini, A.: Signal-locality, uncertainty, and the subquantum H-theorem. I. Phys. Lett. A \textbf{156}, 5--11 (1991). \url{https://doi.org/10.1016/0375-9601(91)90116-P}
+
+\bibitem{Valentini2002}
+Valentini, A.: Subquantum information and computation. Pramana \textbf{59}, 269--277 (2002). \url{https://doi.org/10.1007/s12043-002-0117-1}
+
+\bibitem{ValiantVazirani1986}
+Valiant, L.G., Vazirani, V.V.: NP is as easy as detecting unique solutions. Theor. Comput. Sci. \textbf{47}, 85--93 (1986). \url{https://doi.org/10.1016/0304-3975(86)90135-0}
+
+\bibitem{Laflamme1996}
+Laflamme, R., Miquel, C., Paz, J.P., Zurek, W.H.: Perfect quantum error correcting code. Phys. Rev. Lett. \textbf{77}, 198--201 (1996). \url{https://doi.org/10.1103/PhysRevLett.77.198}
+
+\bibitem{KnillLaflamme1997}
+Knill, E., Laflamme, R.: Theory of quantum error-correcting codes. Phys. Rev. A \textbf{55}, 900--911 (1997). \url{https://doi.org/10.1103/PhysRevA.55.900}
+
+\bibitem{VyWangJacobs2013}
+Vy, O., Wang, X., Jacobs, K.: Error-transparent evolution: the ability of multi-body interactions to bypass decoherence. New J. Phys. \textbf{15}, 053002 (2013). \url{https://doi.org/10.1088/1367-2630/15/5/053002}
+
+\bibitem{AliferisGottesmanPreskill2006}
+Aliferis, P., Gottesman, D., Preskill, J.: Quantum accuracy threshold for concatenated distance-3 codes. Quantum Inf. Comput. \textbf{6}, 97--165 (2006). \url{https://doi.org/10.26421/QIC6.2-1}
+
+\bibitem{Beale2018}
+Beale, S.J., Wallman, J.J., Guti\'errez, M., Brown, K.R., Laflamme, R.: Quantum error correction decoheres noise. Phys. Rev. Lett. \textbf{121}, 190501 (2018). \url{https://doi.org/10.1103/PhysRevLett.121.190501}
+
+\end{thebibliography}
+
+\end{document}
