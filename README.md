@@ -17,6 +17,8 @@ For a zero-versus-one-witness problem on `n` bits:
 
 The theorem is explicitly conditional on access to the specified nonequilibrium ensemble, a fixed-size error-transparent interface, and syndrome-resolved fault histories represented by macroscopic configuration-space records. It is not a theorem for an arbitrary unsyndromed coherent bath, nor a claim that usable nonequilibrium matter exists.
 
+The elementary arithmetic steps underlying these claims — the closed form `R = n·log 2 + log 4` for the nonequilibrium cost, the concatenation master inequality `q(j+1) ≤ A·q(j)² ⟹ q(k) ≤ A⁻¹·(A·q 0)^{2^k}`, and the linear-in-n expansion of the binary KL divergence `d(c ‖ p_*)` — are machine-checked in Lean 4 + mathlib under `lean/`.
+
 ## Repository layout
 
 - `manuscript/` — LaTeX source, compiled PDF, and Springer Nature class file.
@@ -42,6 +44,17 @@ Run the arithmetic checks with:
 python3 scripts/check_scaling.py --n 100
 python3 -m unittest scripts/test_scaling.py
 ```
+
+Check the Lean proofs (requires [`elan`](https://github.com/leanprover/elan)):
+
+```bash
+cd lean
+lake update
+lake exe cache get
+lake build
+```
+
+See `lean/README.md` for the scope of what is and is not formalized.
 
 ## AI contribution
 
