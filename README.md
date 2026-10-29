@@ -22,6 +22,7 @@ The theorem is explicitly conditional on access to the specified nonequilibrium 
 - `manuscript/` — LaTeX source, compiled PDF, and Springer Nature class file.
 - `notes/` — assumptions, terminology decisions, research history, and AI contribution statement.
 - `scripts/` — small independent arithmetic checks for the asymptotic bounds.
+- `lean/` — partial Lean 4 + mathlib formalization of the elementary arithmetic claims (`R n = n·log 2 + log 4`, the concatenation master inequality, and the KL-divergence expansion). See `lean/README.md` for scope and build instructions.
 - `.github/workflows/` — automated LaTeX build.
 - `AGENTS.md` — instructions for Codex and other coding agents.
 

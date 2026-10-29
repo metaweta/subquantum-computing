@@ -15,8 +15,14 @@ __pycache__/
 *.py[cod]
 .venv/
 
+# Lean / Lake build products
+lean/.lake/
+lean/build/
+lean/lake-packages/
+
 # OS/editor
 .DS_Store
 *~
 .vscode/
 .idea/
+.claude/
