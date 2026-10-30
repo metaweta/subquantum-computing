@@ -1,109 +1,103 @@
 # Lean 4 formalization
 
 This directory contains a Lean 4 + mathlib formalization of the
-**logical/arithmetic skeleton** of the manuscript's main theorem. The
-physical content enters as hypotheses rather than being proved from first
+logical, algebraic, and arithmetic skeleton of the manuscript. Physical
+content enters as hypotheses rather than being proved from first
 principles.
 
-## What is formalized
+## Mapping to manuscript (v0.2, "Robustness transfer and conditional
+## fault tolerance")
 
-- `Subquantum.Entropy` — `pStar n = (2^n)⁻¹` and the closed-form
-  `R n = n · log 2 + log 4` for the nonequilibrium relative-entropy cost
-  (manuscript abstract and Eq. (eq:linearresource)).
-- `Subquantum.Concatenation` — the master inequality
-  `q (j+1) ≤ A · q(j)² ⟹ q k ≤ A⁻¹ · (A · q 0) ^ (2^k)`
-  by induction on `k` (Eq. (eq:doubleexp)).
+- `Subquantum.Entropy` — `pStar n = (2^n)⁻¹` and
+  `R n = n · log 2 + log 4` for the nonequilibrium relative-entropy
+  cost (manuscript abstract and Eq. (eq:linearresource)).
 - `Subquantum.KL` — expansion of binary KL divergence `d(c ‖ p_*)`
-  isolating the `c · n · log 2` term underwriting the `Ω(n)` lower bound.
-- `Subquantum.ErrorTransparent` — the operator-algebraic derivations of
-  the error-transparent interface (Section 6):
-  - `logicalMarker_intertwine`: from Knill–Laflamme orthogonality
-    `V_b† · V_a = δ_{ab} P_C` and `Q_L · P_C = Q_L`, derives Eq.
-    (eq:intertwine): `Q̃_L · V_a = V_a · Q_L`.
-  - `pow_mul_of_intertwine` and `transparent_pow`: the polynomial
-    content of Eq. (eq:transparentidentity),
-    `(Q̃_L · p_y)^n · V_a = V_a · (Q_L · p_y)^n` for every `n`, by
-    induction.
-- `Subquantum.ExpTransparent` — the exponential form of Eq.
-  (eq:transparentidentity):
-  - `exp_mul_of_intertwine`: `exp(X · p) · V = V · exp(Y · p)` under
-    the hypotheses `X · V = V · Y` (intertwining) and `p · V = V · p`
-    (pointer commutes with code-register ops). Proved by applying the
-    `HasSum (fun n => (n!)⁻¹ · x^n) (exp x)` term-by-term and passing
-    multiplication by `V` through via `HasSum.mul_right`/`mul_left`.
-    Requires a complete normed ℝ-algebra.
-- `Subquantum.MeasureBound` — the measure-theoretic content of (A4) +
-  Eq. (eq:ratioBound):
-  - `event_bound_of_rnDeriv_le`: from a *pointwise* density bound
-    `rnDeriv ρ μ ≤ C` (μ-a.e.) and absolute continuity `ρ ≪ μ`, derives
-    the *event-level* bound `ρ(E) ≤ C · μ(E)` for every set `E`. This
-    is the step from the manuscript's "the ratio ρ/|Ψ|² is transported
-    unchanged" (pointwise statement) to Eq. (eq:eventBound)
-    `Pr_ρ(B) ≤ (4/p_*) · Pr_μ(B)`. Pure Radon–Nikodym integration.
-  - `failure_bound_measure_theoretic`: in an abstract measurable space
-    `Ω` with equilibrium measure `μ` and nonequilibrium measure `ρ`
-    satisfying the event-level density bound `ρ(E) ≤ C · μ(E)`, and
-    fault events `B : Fin L → Set Ω` covering a failure set
-    `F ⊆ ⋃ᵢ Bᵢ`, we have `ρ(F) ≤ C · Σᵢ μ(Bᵢ)`. Specializing to
-    `C = 4/p_*` and uniform `μ(Bᵢ) ≤ q_k` recovers Eq. (eq:neqbad).
-  - `failure_bound_uniform`: uniform version `ρ(F) ≤ C · L · q`.
-  - `failure_bound_from_rnDeriv`: end-to-end composition — a pointwise
-    density bound + measurable fault events ⟹ union-bounded failure
-    estimate (manuscript's chain (eq:ratioBound) + (eq:union)
-    ⟹ (eq:neqbad)).
-  - What this does **not** do: justify that the pilot-wave flow
-    actually preserves the pointwise density bound (that is the
-    physics content of pilot-wave Radon–Nikodym transport) or that
-    fault histories admit the measurable structure (A4). What it
-    isolates: exactly those two physical inputs are what the
-    reviewer is being asked to grant; everything downstream is
-    measure theory.
-- `Subquantum.SyndromeOnly` — the syndrome-only transparency class of
+  isolating the `c · n · log 2` term that gives the `Ω(n)` lower bound
+  of Lemma 1 (Rare-set lower bound).
+- `Subquantum.ErrorTransparent` — operator-algebraic content of
+  Section 5:
+  - `logicalMarker_intertwine`: Eq. (eq:intertwine)
+    `Q̃_L · V_a = V_a · Q_L`, derived from Knill–Laflamme
+    (eq:KLorthogonal) + `Q_L · P_C = Q_L`.
+  - `pow_mul_of_intertwine` / `transparent_pow`: polynomial content of
+    Eq. (eq:transparentidentity),
+    `(Q̃_L · p_y)^n · V_a = V_a · (Q_L · p_y)^n`, by induction.
+- `Subquantum.ExpTransparent` — exponential form of
+  Eq. (eq:transparentidentity):
+  - `exp_mul_of_intertwine`: `exp(X · p) · V = V · exp(Y · p)` from
+    intertwining + commutation, by applying the exponential power
+    series term-by-term via `HasSum.mul_right`/`HasSum.mul_left` in a
+    complete normed ℝ-algebra.
+- `Subquantum.SyndromeOnly` — syndrome-only transparency class of
   Eq. (eq:syndromeonly):
-  - `commute_of_syndromeOnly_codeOnly`: in the tensor-product model
-    `H₁ ⊗ H₂`, operators of form `id ⊗ s` (syndrome-only) commute with
-    operators of form `Q ⊗ id` (code-only), since both compositions
-    equal `Q ⊗ s`. Uses `LinearMap.lTensor_comp_rTensor` and
-    `LinearMap.rTensor_comp_lTensor` from mathlib.
-  - `commute_of_transparent_encoded`: pulling back through an isometry
-    `W : K ≃ₗ[𝕜] H₁ ⊗ H₂`, any transparent operator (`WSW† = I_L ⊗ s`)
-    commutes with any encoded-pointer operator (`WQ̃_LW† = Q_L ⊗ I_syn`)
-    on the full physical space `K`. This is the manuscript's statement
-    in Section 6.
-- `Subquantum.FaultTolerance` — the arithmetic core of the
-  Fault-tolerance theorem (Section 7):
-  - `failureUpperBound_le_delta`: given the concatenation recursion
-    (A3) and a level `k` satisfying the sufficient-level inequality
-    `(n · log 2 + log(4L/(Aδ))) / (-log(A·q₀)) ≤ 2^k` (Eq. (eq:kbound)),
-    the failure upper bound `4 · L · q(k) / p_*` is at most `δ`
-    (combines (eq:neqbad), (eq:doubleexp), and (eq:kbound)).
-  - `main_fault_tolerance`: existence of a concatenation level `k` at
-    which the failure upper bound is at most `δ`, under the premises
-    (A3-style recursion, positive constants, below-threshold condition).
+  - `commute_of_syndromeOnly_codeOnly`: in `H₁ ⊗ H₂`, operators of
+    form `id ⊗ s` commute with operators of form `Q ⊗ id`.
+  - `commute_of_transparent_encoded`: pulled back through an isometry
+    `W : K ≃ₗ[𝕜] H₁ ⊗ H₂`, any `S` with `WSW† = I_L ⊗ s` commutes with
+    any `T` with `WTW† = Q_L ⊗ I_syn` on `K`.
+- `Subquantum.MeasureBound` — the pilot-wave Radon–Nikodym transport
+  underlying Section 6 (Lemma 2, Event-bound transport, and
+  Theorem 1, Robustness transfer):
+  - `event_bound_of_rnDeriv_le` is the content of Lemma 2
+    (`lem:eventtransport`): from `ρ ≪ μ` and the pointwise bound
+    `rnDeriv ρ μ ≤ C` (μ-a.e.), the event-level bound
+    `ρ(E) ≤ C · μ(E)` follows by `∫_E (rnDeriv) dμ ≤ ∫_E C dμ`. This
+    is the step from pointwise ratio transport along Bohmian
+    trajectories to Eq. (eq:eventBound) at the event level, used in
+    the proof of Theorem 1 (`thm:transfer`) with `C = 4/p_*`.
+  - `failure_bound_measure_theoretic` / `failure_bound_uniform` /
+    `failure_bound_from_rnDeriv` are additional lemmas that compose
+    the event bound with a classical union bound over fault events.
+    These are *not* used by Theorem 1 directly (the transfer
+    principle delegates all fault-path bookkeeping to the
+    conventional FT input `ε_k(n) ≤ L(n) q_k`, Eq. (eq:FTinput)); they
+    remain available for anyone who prefers the explicit
+    enumeration form.
+- `Subquantum.Concatenation` — iteration of Eq. (eq:FTinput):
+  - `concatenation_bound`: the master inequality
+    `q(j+1) ≤ A · q(j)² ⟹ q(k) ≤ A⁻¹ · (A · q₀)^(2^k)`, by induction.
+    This is the double-exponential suppression used in the proof of
+    Corollary 1 (Conditional fault-tolerance scaling).
+- `Subquantum.FaultTolerance` — arithmetic core of Corollary 1
+  (`cor:FT`):
+  - `failureUpperBound_le_delta`: given the recursion from
+    Eq. (eq:FTinput) and a concatenation level `k` satisfying
+    Eq. (eq:kbound), the bound `4 · L · q(k) / p_* ≤ δ` holds.
+    Together with Theorem 1 this gives the nonequilibrium failure
+    bound of Eq. (eq:neqbad).
+  - `main_fault_tolerance`: existence of such a `k` for every
+    `δ, n`. The explicit `k = O(log n)` statement of the manuscript
+    is not strengthened; existence of a sufficient `k` is proved
+    directly.
 
 ## What is NOT formalized
 
-The physical content underpinning the manuscript's theorem is not
-formalized and enters `FaultTolerance.lean` only as hypotheses:
+The physical content underpinning the manuscript's theorems remains
+hypothesis-level:
 
-- **Basin conditioning / likelihood-ratio bound** `ρ/μ ≤ 4/p_*`
-  (manuscript Eqs. (eq:fullconditioned), (eq:ratioBound)): the
-  one-dimensional pilot-wave transport of the Radon–Nikodym derivative is
-  not formalized. The failure upper bound `4 L q_k / p_*` is used as a
-  definition rather than derived from the measure-theoretic argument.
-- **Union bound (A4)** `Pr_μ(B_k) ≤ L(n) · q_k`: representing fault
-  events as macroscopic configuration-space records with equilibrium
-  measures equal to Born probabilities is axiomatic input.
-- **Pilot-wave dynamics** in 1D and the cumulative-Born-probability
-  conservation along trajectories.
-- **Monotonicity lift** from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`.
-- **Polynomial `L(n)`** and the derivation that `k = O(log n)` follows
-  from the sufficient-level inequality: the file provides existence of
-  *some* sufficient `k`, not the explicit `O(log n)` bound on its size.
+- Common Bohmian transport of `ρ_t` and `μ_t` under the pilot-wave
+  flow is used as a hypothesis of Lemma 2 and the pointwise density
+  bound of Eq. (eq:ratioBound). The pilot-wave dynamics itself is
+  not formalized.
+- The conventional fault-tolerance input of Eq. (eq:FTinput) — the
+  recursion `q_{j+1} ≤ A q_j²` and the Born-rule failure bound
+  `ε_k(n) ≤ L(n) q_k` — is axiomatic input to Corollary 1. It is
+  justified in the manuscript by citing Aliferis–Gottesman–Preskill,
+  not derived in Lean.
+- Monotonicity lift from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`,
+  used in the proof of Lemma 1.
+- The architectural requirements highlighted in the manuscript's
+  Section 7 — logical opacity of ordinary equilibrium records,
+  bounded-body implementation of the error-transparent readout,
+  direct control of large pointer disturbances — are open problems
+  in the manuscript and not addressed here.
 
-Each of these would be a substantial Lean project on its own; several
-require infrastructure (quantum circuits, Bohmian trajectories, syndrome
-subspaces) that is not currently in mathlib.
+The scope statement from Lemma 2 and Theorem 1 of the manuscript is
+exactly what the Lean development proves: given common Bohmian
+transport (a physical hypothesis) and a conventional Born-rule failure
+bound (an architectural hypothesis), the nonequilibrium failure bound
+`4 ε / p_*` follows mechanically, as does its concatenated-code
+corollary.
 
 ## Build
 

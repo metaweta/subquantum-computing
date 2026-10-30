@@ -3,57 +3,52 @@ import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.Tactic
 
 /-!
-# Measure-theoretic content of (A4) + (eq:ratioBound)
+# Pilot-wave Radon–Nikodym transport (Lemma 2 + Theorem 1 of manuscript)
 
-The manuscript's assumption (A4) asserts that fault histories and
-logical-location failure events admit a *macroscopic* configuration-space
-representation whose equilibrium measures are Born probabilities, so that
-ordinary classical probability tools — in particular, union bounds over
-the `L(n)` fault locations — apply. This file does not justify (A4)
-physically; it formalizes the mathematical consequence of (A4) combined
-with the pilot-wave Radon–Nikodym transport bound of Eq. (eq:ratioBound).
+The manuscript isolates its pilot-wave content as a transfer principle
+(Section 6, Lemma 2 "Event-bound transport" and Theorem 1 "Equilibrium-
+to-nonequilibrium robustness transfer"): if `ρ ≪ μ` with pointwise
+Radon–Nikodym derivative `dρ/dμ ≤ C` under common Bohmian transport,
+then at the event level `ρ_t(B) ≤ C · μ_t(B)` for every measurable `B`;
+specializing to the conditioned nonequilibrium ensemble gives `C = 4/p_*`
+and the robustness-transfer bound `ρ_T(F) ≤ (4/p_*) · μ_T(F)` for any
+final failure event `F`.
 
-**Theorem** (`failure_bound_measure_theoretic`). Given a measurable space
-`Ω` with equilibrium measure `μ` and nonequilibrium measure `ρ`
-satisfying the event-level density bound `ρ(E) ≤ C · μ(E)` (the content
-of Eq. (eq:ratioBound)), and `L` fault events `B : Fin L → Set Ω`
-covering a failure set `F ⊆ ⋃ᵢ Bᵢ`, we have
+This file formalizes the measure-theoretic step from the pointwise
+density bound to the event-level density bound — Lemma 2 of the
+manuscript. The pointwise bound itself is a hypothesis (justified in the
+manuscript by the common continuity equation for `ρ_t` and `μ_t = |Ψ_t|²`
+under the Bohmian velocity field).
 
-    ρ(F) ≤ C · ∑ᵢ μ(Bᵢ).
+What this file does **not** do: justify the pointwise density bound,
+or the common-transport hypothesis itself. Those are the physical
+content of the pilot-wave formalism.
 
-Specializing to `C = 4/p_*` and `μ(Bᵢ) ≤ q_k` for all `i` recovers the
-manuscript's `Pr_ρ(failure) ≤ 4·L(n)·q_k / p_*` (Eq. (eq:neqbad)).
-
-What this file does **not** do: justify that fault histories actually
-form such a measurable structure, or that the pilot-wave transport
-globally preserves the density bound uniformly over the full
-configuration space. Those are the physics content of (A4) and the
-transport argument; they remain hypotheses of the theorem.
-
-The value of this formalization is to isolate exactly what (A4) is being
-asked to buy: an abstract measurable-space + union-bound structure.
-Granting that, the failure bound follows by two lines of measure theory.
+For completeness this file also provides lemmas that compose the event
+bound with a classical union bound over fault events
+(`failure_bound_measure_theoretic`, `failure_bound_uniform`,
+`failure_bound_from_rnDeriv`). The manuscript's transfer-principle
+framing does *not* use these — all fault-path bookkeeping is delegated
+to the conventional FT input of Eq. (eq:FTinput) — but they remain
+available for anyone who prefers the explicit enumeration form.
 -/
 
 namespace Subquantum
 
 open MeasureTheory ENNReal
 
-/-! ### From Radon–Nikodym derivative bound to event-level bound
+/-! ### Lemma 2 (Event-bound transport)
 
-The step in the manuscript from "the ratio `ρ/|Ψ|²` is transported
-unchanged along the pilot-wave flow, so the essential-supremum bound
-`ρ/|Ψ|² ≤ 4/p_*` holds at all later times" (pointwise statement) to
-Eq.~(eq:eventBound) `Pr_ρ(B) ≤ (4/p_*) Pr_μ(B)` (event-level statement)
-is a Radon–Nikodym fact: an a.e. pointwise bound on the density integrates
-to an event-level bound. This is formalized below. The pilot-wave
-transport of the density itself is physics and remains hypothetical. -/
+The step from pointwise Radon–Nikodym bound to event-level bound is the
+content of the manuscript's Lemma 2 (`lem:eventtransport`). It is a
+one-line measure-theoretic fact once stated at the right level of
+abstraction. -/
 
-/-- **Pointwise density bound ⟹ event bound.**
+/-- **Lemma 2 (Event-bound transport), manuscript `lem:eventtransport`.**
 If `ρ ≪ μ` and `rnDeriv ρ μ ≤ C` holds `μ`-almost everywhere, then
-`ρ(E) ≤ C · μ(E)` for every set `E`. This is the step from
-"pointwise density transport" (manuscript Eq. (eq:ratioBound), pointwise)
-to "event-level density bound" (Eq. (eq:eventBound)). -/
+`ρ(E) ≤ C · μ(E)` for every set `E`. Specializing to `C = 4/p_*` and
+to a final failure event `F` gives Theorem 1 (`thm:transfer`),
+`ρ_T(F) ≤ (4/p_*) · μ_T(F)`. -/
 theorem event_bound_of_rnDeriv_le
     {Ω : Type*} [MeasurableSpace Ω]
     (μ ρ : Measure Ω) [SigmaFinite μ] [ρ.HaveLebesgueDecomposition μ]
@@ -69,7 +64,14 @@ theorem event_bound_of_rnDeriv_le
         exact hBound.mono fun _ hx _ => hx
     _ = C * μ E := setLIntegral_const E C
 
-/-! ### Chained with the union-bound/failure-bound step -/
+/-! ### Union-bound layer (not used by the manuscript's transfer principle)
+
+These lemmas combine Lemma 2 with a classical union bound over fault
+events. The manuscript's transfer principle (Theorem 1) deliberately
+avoids this layer: all enumeration of fault paths is delegated to the
+conventional FT input `ε_k(n) ≤ L(n) · q_k`. The union-bound layer
+below is kept because it is a correct derivation of the earlier version
+of the paper's `4·L(n)·q_k/p_*` bound. -/
 
 /-- **Measure-theoretic failure bound.**
 Combines (eq:ratioBound) — the density bound `ρ ≤ C·μ` at the event level
