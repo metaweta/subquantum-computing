@@ -32,6 +32,20 @@ principles.
     `HasSum (fun n => (n!)⁻¹ · x^n) (exp x)` term-by-term and passing
     multiplication by `V` through via `HasSum.mul_right`/`mul_left`.
     Requires a complete normed ℝ-algebra.
+- `Subquantum.MeasureBound` — the measure-theoretic content of (A4) +
+  Eq. (eq:ratioBound):
+  - `failure_bound_measure_theoretic`: in an abstract measurable space
+    `Ω` with equilibrium measure `μ` and nonequilibrium measure `ρ`
+    satisfying `ρ(E) ≤ C · μ(E)` (the density-bound content of
+    (eq:ratioBound)), and fault events `B : Fin L → Set Ω` covering a
+    failure set `F ⊆ ⋃ᵢ Bᵢ`, we have `ρ(F) ≤ C · Σᵢ μ(Bᵢ)`. Specializing
+    to `C = 4/p_*` and uniform `μ(Bᵢ) ≤ q_k` recovers Eq. (eq:neqbad).
+  - `failure_bound_uniform`: uniform version `ρ(F) ≤ C · L · q`.
+  - What this does **not** do: justify that fault histories admit the
+    measurable structure (that is the physics content of (A4)). The
+    formalization isolates exactly what (A4) is being asked to buy: an
+    abstract measurable-space structure. Granting that, the failure
+    bound is two lines of measure theory.
 - `Subquantum.SyndromeOnly` — the syndrome-only transparency class of
   Eq. (eq:syndromeonly):
   - `commute_of_syndromeOnly_codeOnly`: in the tensor-product model
@@ -93,5 +107,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6380 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6444 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.
