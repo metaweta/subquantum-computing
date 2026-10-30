@@ -5,4 +5,5 @@ import Subquantum.ErrorTransparent
 import Subquantum.ExpTransparent
 import Subquantum.SyndromeOnly
 import Subquantum.MeasureBound
+import Subquantum.PointerMargin
 import Subquantum.FaultTolerance

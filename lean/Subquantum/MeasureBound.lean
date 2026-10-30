@@ -64,6 +64,34 @@ theorem event_bound_of_rnDeriv_le
         exact hBound.mono fun _ hx _ => hx
     _ = C * μ E := setLIntegral_const E C
 
+/-! ### Trajectory-space specialization (manuscript's `lem:historyevent`)
+
+The manuscript's History-event likelihood-ratio bound is the same lemma
+applied on trajectory space: the path measures `ℙ_μ^T = (Ξ_T)_# μ_0` and
+`ℙ_ρ^T = (Ξ_T)_# ρ_0` inherit the Radon–Nikodym density bound as a
+history-event bound. The following statement makes that specialization
+explicit. -/
+
+/-- **History-event likelihood-ratio bound (manuscript `lem:historyevent`).**
+Pushforward of `event_bound_of_rnDeriv_le` through any measurable map
+`Ξ : Ω → Γ`. If `ρ ≪ μ` with `rnDeriv ρ μ ≤ C` μ-a.e., then for every
+measurable `H ⊆ Γ`, the pushforward measures satisfy
+`(ρ.map Ξ)(H) ≤ C · (μ.map Ξ)(H)`.
+
+Specializing `Γ` to the trajectory space `Γ_T` and `Ξ` to the trajectory
+map `Ξ_T` from initial configurations to Bohmian trajectories gives the
+manuscript's statement for history events. -/
+theorem history_event_bound
+    {Ω Γ : Type*} [MeasurableSpace Ω] [MeasurableSpace Γ]
+    (μ ρ : Measure Ω) [SigmaFinite μ] [ρ.HaveLebesgueDecomposition μ]
+    (hAC : ρ ≪ μ) (C : ℝ≥0∞)
+    (hBound : ∀ᵐ x ∂μ, ρ.rnDeriv μ x ≤ C)
+    (Ξ : Ω → Γ) (hΞ : Measurable Ξ)
+    {H : Set Γ} (hH : MeasurableSet H) :
+    (ρ.map Ξ) H ≤ C * (μ.map Ξ) H := by
+  rw [Measure.map_apply hΞ hH, Measure.map_apply hΞ hH]
+  exact event_bound_of_rnDeriv_le μ ρ hAC C hBound (Ξ ⁻¹' H)
+
 /-! ### Union-bound layer (not used by the manuscript's transfer principle)
 
 These lemmas combine Lemma 2 with a classical union bound over fault

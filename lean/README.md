@@ -36,23 +36,33 @@ principles.
     `W : K ≃ₗ[𝕜] H₁ ⊗ H₂`, any `S` with `WSW† = I_L ⊗ s` commutes with
     any `T` with `WTW† = Q_L ⊗ I_syn` on `K`.
 - `Subquantum.MeasureBound` — the pilot-wave Radon–Nikodym transport
-  underlying Section 6 (Lemma 2, Event-bound transport, and
-  Theorem 1, Robustness transfer):
+  underlying Section 6 (Lemma 2, Event-bound transport; Lemma on
+  history-event bound; Theorem 1, Robustness transfer):
   - `event_bound_of_rnDeriv_le` is the content of Lemma 2
     (`lem:eventtransport`): from `ρ ≪ μ` and the pointwise bound
     `rnDeriv ρ μ ≤ C` (μ-a.e.), the event-level bound
-    `ρ(E) ≤ C · μ(E)` follows by `∫_E (rnDeriv) dμ ≤ ∫_E C dμ`. This
-    is the step from pointwise ratio transport along Bohmian
-    trajectories to Eq. (eq:eventBound) at the event level, used in
-    the proof of Theorem 1 (`thm:transfer`) with `C = 4/p_*`.
+    `ρ(E) ≤ C · μ(E)` follows by `∫_E (rnDeriv) dμ ≤ ∫_E C dμ`. Used
+    in the proof of Theorem 1 (`thm:transfer`) with `C = 4/p_*`.
+  - `history_event_bound` specializes `event_bound_of_rnDeriv_le`
+    through any measurable map `Ξ : Ω → Γ` to the pushforward
+    measures `ρ.map Ξ` and `μ.map Ξ`. Taking `Γ` to be the trajectory
+    space `Γ_T` and `Ξ` to be the trajectory map `Ξ_T` recovers the
+    manuscript's `lem:historyevent` `ℙ_ρ^T(H) ≤ C · ℙ_μ^T(H)`.
   - `failure_bound_measure_theoretic` / `failure_bound_uniform` /
-    `failure_bound_from_rnDeriv` are additional lemmas that compose
+    `failure_bound_from_rnDeriv` are auxiliary lemmas that compose
     the event bound with a classical union bound over fault events.
     These are *not* used by Theorem 1 directly (the transfer
     principle delegates all fault-path bookkeeping to the
-    conventional FT input `ε_k(n) ≤ L(n) q_k`, Eq. (eq:FTinput)); they
-    remain available for anyone who prefers the explicit
-    enumeration form.
+    conventional FT input `ε_dec,k + ε_rec,k ≤ L(n) q_k`,
+    Eq. (eq:FTinput)); they remain available as valid lemmas.
+- `Subquantum.PointerMargin` — Lemma 3 (`lem:pointermargin`) on the
+  constant pointer margin:
+  - `pointerCoord_sub`: the general difference formula
+    `y(a) - y(b) = λ · log(b/a)`.
+  - `shell_margin`: the distance `λ · log 2` between the near edge of
+    the preparation shell and the marked-basin boundary, independent
+    of `p_* = 2^{-n}`.
+  - `shell_width`: the shell itself has width `λ · log 2`.
 - `Subquantum.Concatenation` — iteration of Eq. (eq:FTinput):
   - `concatenation_bound`: the master inequality
     `q(j+1) ≤ A · q(j)² ⟹ q(k) ≤ A⁻¹ · (A · q₀)^(2^k)`, by induction.
@@ -113,5 +123,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6816 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6818 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.

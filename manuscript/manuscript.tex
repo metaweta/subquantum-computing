@@ -30,7 +30,7 @@
 \orgaddress{\city{Auckland}, \country{New Zealand}}}
 
 \abstract{
-Valentini has proposed that nonequilibrium de Broglie--Bohm systems could enable ``subquantum'' computation, while leaving open how the required nonequilibrium resources scale with input size. For an $n$-bit zero-versus-one-witness problem, let $p_*=2^{-n}$. The initial uniform superposition already contains every candidate basis component; a reversible verifier marks the witness component, if one exists, so the actual marked-state weight is either $0$ or $p_*$. We show that a one-dimensional nonequilibrium pointer prepared using the design value $p_*$ selects the marked outcome with unit probability on a unique-witness instance and never selects it on an ideal no-witness instance. The required relative entropy is $R=\ln(4/p_*)=n\ln2+O(1)$, and a data-processing bound gives a matching $\Omega(n)$ lower bound for constant-probability selection. We then prove a general robustness-transfer lemma: if a conventional implementation has final Born-rule failure probability $\varepsilon$, the same final event has nonequilibrium probability at most $4\varepsilon/p_*$. Thus any fault-tolerant architecture with $\varepsilon_k(n)\le \operatorname{poly}(n)\theta^{2^k}$ requires only $k=O(\log n)$ concatenation levels. This conclusion does not require a classical decomposition into Bohmian fault histories. A five-qubit error-transparent readout illustrates how correctable syndrome sectors can preserve the ideal pointer translation, but a bounded-body scalable implementation is left open. Pointer disturbances are treated separately: an exponential-tail realization gives a constant physical basin margin, so bounded analog errors need not shrink exponentially. Most exploratory derivations and manuscript drafting were carried out interactively with OpenAI ChatGPT (GPT-5.6 Sol), under the author's direction and critical review.
+Valentini has proposed that nonequilibrium de Broglie--Bohm systems could enable ``subquantum'' computation, while leaving open how the required nonequilibrium resources scale with input size. For an $n$-bit zero-versus-one-witness problem, let $p_*=2^{-n}$. The initial uniform superposition already contains every candidate basis component; a reversible verifier marks the witness component, if one exists, so the actual marked-state weight is either $0$ or $p_*$. We show that a one-dimensional nonequilibrium pointer prepared using the design value $p_*$ selects the marked outcome with unit probability on a unique-witness instance and never selects it on an ideal no-witness instance. The required relative entropy is $R=\ln(4/p_*)=n\ln2+O(1)$, and a data-processing bound gives a matching $\Omega(n)$ lower bound for constant-probability selection. We then prove a general robustness-transfer lemma on Bohmian trajectory space. We separate decision faults from pre-readout record leakage: if their measurable equilibrium history probabilities are at most $\varepsilon_{\mathrm{dec}}$ and $\varepsilon_{\mathrm{rec}}$, respectively, their combined nonequilibrium contribution is at most $4(\varepsilon_{\mathrm{dec}}+\varepsilon_{\mathrm{rec}})/p_*$. Thus any history-event-realizable fault-tolerant architecture with $\varepsilon_{\mathrm{dec},k}(n)+\varepsilon_{\mathrm{rec},k}(n)\le \operatorname{poly}(n)\theta^{2^k}$ requires only $k=O(\log n)$ concatenation levels. The fault-tolerance bridge itself requires only measurable bad-history events with equilibrium path-probability bounds. As an example, a finite stochastic fault model supplies such an event when the conventionally bad patterns are physically represented by a measurable subset of Bohmian trajectories whose equilibrium path measure is bounded by the stochastic analysis. This conclusion does not require a classical decomposition of a general coherent Bohmian bath, and an ordinary trace-distance or channel-error bound alone does not establish the required event-level hypothesis. A separate five-qubit illustration shows how correctable syndrome sectors can preserve the ideal pointer translation at fixed size, but it is not used in the main theorem and a bounded-body scalable implementation is left open. Pointer disturbances are treated separately: an exponential-tail realization gives a constant physical basin margin, so bounded analog errors need not shrink exponentially. Most exploratory derivations and manuscript drafting were carried out interactively with OpenAI ChatGPT (GPT-5.6 Sol), under the author's direction and critical review.
 }
 
 \keywords{de Broglie--Bohm theory, quantum nonequilibrium, subquantum computation, quantum error correction, fault tolerance, computational complexity}
@@ -45,7 +45,7 @@ A recent review makes the missing complexity question explicit: to assess the po
 
 The setting is a promise problem with zero or one accepting witness. Write $p_*=2^{-n}$ for the design weight associated with one basis state in the uniform superposition. The superposition already contains every candidate component. A reversible verifier marks the unique witness, when one exists, by correlating its component with a logical flag. Thus the actual marked-state weight is $p_f\in\{0,p_*\}$, rather than a branch being created by the verifier. We prepare a nonequilibrium pointer entirely inside the Bohmian basin leading to the marked outcome when $p_f=p_*$. With relative entropy from quantum equilibrium as the additive resource measure, the resulting cost is linear in $n$ and is optimal up to an additive constant.
 
-The second part treats robustness in two layers. First, we isolate a purely pilot-wave transfer principle. If the initial nonequilibrium density is bounded by a constant multiple $C$ of equilibrium, then common Bohmian transport preserves the event-level inequality $\rho_t(B)\le C\mu_t(B)$ for every later measurable configuration-space event $B$. For the pointer ensemble used here $C=4/p_*$. Consequently a conventional implementation with final Born-rule failure probability $\varepsilon$ has nonequilibrium failure probability at most $4\varepsilon/p_*$. This statement requires no enumeration of Bohmian fault histories. Standard concatenated-code suppression is then used only as one sufficient way of making the conventional failure probability exponentially small. Second, we examine the readout interface itself. A five-qubit error-transparent construction gives exactly the ideal pointer translation throughout the included syndrome sectors, but we do not claim that its concatenated, bounded-body implementation follows automatically from ordinary threshold theorems. That hardware problem is left open. Analog pointer disturbances are handled separately through a constant physical margin in an exponential-tail realization.
+The second part treats robustness in two layers. First, we isolate a purely pilot-wave transfer principle. If the initial nonequilibrium density is bounded by a constant multiple $C$ of equilibrium, then common Bohmian transport preserves the event-level inequality $\rho_t(B)\le C\mu_t(B)$ for every later measurable configuration-space event $B$. For the pointer ensemble used here $C=4/p_*$. Consequently, if histories that spoil the final decision have equilibrium probability at most $\varepsilon_{\mathrm{dec}}$ and histories with pre-readout record leakage have equilibrium probability at most $\varepsilon_{\mathrm{rec}}$, their union has nonequilibrium probability at most $4(\varepsilon_{\mathrm{dec}}+\varepsilon_{\mathrm{rec}})/p_*$. This statement does not require the corresponding record to survive until the final time. It does, however, require an event-level implementation guarantee; a trace-distance, diamond-norm, or coherent fault-path bound does not by itself provide one. Standard concatenated-code suppression is then used only as one possible source of an exponentially small conventional implementation-fault bound when that bound can be realized in this history-event form. We then give a trajectory-recorded independent stochastic fault model as one sufficient example. The main bridge does not require a fault-pattern map or exact pattern probabilities; it needs only a measurable bad-history set whose equilibrium path measure is bounded by the conventional stochastic estimate. This is a sufficient model, not a claim about general coherent noise. Second, Appendix~\ref{app:interface} gives a fixed-size five-qubit illustration in which an error-transparent construction yields exactly the ideal pointer translation throughout the included syndrome sectors. The illustration is not used in the main theorem, and we do not claim that its concatenated, bounded-body implementation follows automatically from ordinary threshold theorems. That hardware problem is left open. Analog pointer disturbances are handled separately through a constant physical margin in an exponential-tail realization.
 
 Valiant and Vazirani showed that SAT is as hard, under randomized polynomial-time reductions, as distinguishing formulas with no satisfying assignment from formulas with exactly one \cite{ValiantVazirani1986}. A bounded-error polynomial-time solver for the promise problem considered here would therefore yield, after amplification and repeated isolation, a randomized polynomial-time decision procedure for SAT using the same subquantum primitive. A witness could then be recovered by the standard self-reduction of SAT. The complexity consequence is thus randomized, not a deterministic collapse.
 
@@ -61,7 +61,7 @@ R(\rho\|\mu)
 =\int dq\,\rho(q)\ln\frac{\rho(q)}{\mu(q)}.
 \label{eq:resource}
 \end{equation}
-This is the relative entropy of $\rho$ with respect to $\mu$. It is nonnegative and additive for independent systems. In pilot-wave dynamics, $\rho$ and $|\psi|^2$ obey continuity equations generated by the same velocity field, so the ratio $\rho/|\psi|^2$ is conserved along trajectories \cite{Valentini1991,Valentini2025}. Consequently the fine-grained quantity in Eq.~\eqref{eq:resource} is invariant under exact reversible pilot-wave evolution.
+This is the relative entropy of $\rho$ with respect to $\mu$. It is nonnegative and additive for independent systems. In pilot-wave dynamics, $\rho$ and $|\psi|^2$ obey continuity equations generated by the same velocity field, so the ratio $\rho/|\psi|^2$ is conserved along trajectories \cite{Valentini1991,Valentini2025}. For broad classes of nonrelativistic Hamiltonians the Bohmian flow exists globally for almost every equilibrium initial configuration \cite{Berndl1995}. Consequently the fine-grained quantity in Eq.~\eqref{eq:resource} is invariant under exact reversible pilot-wave evolution on the full-measure domain of the flow.
 
 The same quantity gives a lower bound on selection of a small equilibrium set.
 
@@ -214,18 +214,311 @@ The exponentially small equilibrium probability need not imply exponentially fin
 S(y)=K e^{-y/\lambda}
 \label{eq:exptail}
 \end{equation}
-for a fixed length scale $\lambda$, with smooth compact-support cutoffs placed outside the interval used below. The marked-state basin $u>1-p_*$ is equivalently $S(y)<p_*$. The near edge of the preparation shell in Eq.~\eqref{eq:shell} has $S=p_*/2$. Therefore its physical distance from the basin boundary $S=p_*$ is
+for a fixed length scale $\lambda$, with smooth compact-support cutoffs placed outside the interval used below. Since $S$ is strictly decreasing on this interval, let $y_b$ be the marked-basin boundary defined by $S(y_b)=p_*$. The preparation shell in Eq.~\eqref{eq:shell} is the interval whose survival probabilities satisfy $p_*/4<S(y)<p_*/2$.
+
+\begin{lemma}[Constant physical pointer margin]
+\label{lem:pointermargin}
+For the exponential tail in Eq.~\eqref{eq:exptail}, every point of the preparation shell lies at least
 \begin{equation}
-m=\lambda\ln2,
+m=\lambda\ln2
 \label{eq:pointermargin}
 \end{equation}
-a constant independent of $n$. The shell itself, between survival probabilities $p_*/2$ and $p_*/4$, also has width $\lambda\ln2$. Its location moves only $O(n)$ into the tail because $-\ln p_*=n\ln2$.
+to the marked side of the basin boundary $y_b$. The shell itself has width $\lambda\ln2$. Consequently, if preparation and control errors produce a net adverse relative displacement between the actual pointer coordinate and the basin boundary of magnitude strictly less than $m$, every prepared configuration remains in the marked basin on a unique-witness instance.
+\end{lemma}
 
-This gives a simple direct robustness statement for analog pointer errors. If the combined effect of preparation and control errors moves the effective pointer coordinate, or the relevant basin boundary, by less than $m$ in the adverse direction, then the outcome cannot change. Such bounded disturbances therefore do not have to shrink exponentially with $n$. If larger pointer disturbances occur with directly controlled nonequilibrium probability at most $\eta$, their contribution can be added as $\eta$ to the logical failure probability below. This $\eta$ is a direct bound on the actual pointer disturbance, not a small Born probability to which the nonequilibrium likelihood-ratio factor is subsequently applied. A displacement sufficient to separate the two final packets requires only $O(n)$ range for the family just described, so bounded interaction strength gives polynomial control time.
+\begin{proof}
+Solving Eq.~\eqref{eq:exptail} for the coordinate at survival probability $s$ gives
+\begin{equation}
+y(s)=\lambda\ln\frac{K}{s}.
+\end{equation}
+The basin boundary has $s=p_*$. Because $S$ decreases with $y$, the shell lies to its right, and its nearest edge is the point with $s=p_*/2$. Hence the minimum distance from the shell to the boundary is
+\begin{align}
+y(p_*/2)-y(p_*)
+&=\lambda\ln\frac{K}{p_*/2}-\lambda\ln\frac{K}{p_*}\\
+&=\lambda\ln2=m.
+\end{align}
+Likewise the shell width is
+\begin{align}
+y(p_*/4)-y(p_*/2)
+&=\lambda\ln\frac{K}{p_*/4}-\lambda\ln\frac{K}{p_*/2}\\
+&=\lambda\ln2.
+\end{align}
+If the net adverse relative displacement is smaller than $m$, even the shell point nearest the boundary remains on the side $y>y_b$, equivalently $S(y)<p_*$. All other shell points have a larger margin.
+\end{proof}
 
-\section{An error-transparent encoded pointer interface}
+The shell location grows only linearly with $n$: at either edge, $y=\lambda\ln K+\lambda n\ln2+O(1)$. Thus bounded analog disturbances need not shrink exponentially with $n$. If larger pointer disturbances occur with directly controlled nonequilibrium probability at most $\eta$, their contribution can be added as $\eta$ to the logical implementation-fault probability below. This premise is intentionally strong: $\eta$ must be established directly for the actual nonequilibrium pointer dynamics. It is not permissible to take a small Born probability for a pointer disturbance and simply relabel it as $\eta$, because such a Born probability would still be subject to the likelihood-ratio amplification below. A displacement sufficient to separate the two final packets requires only $O(n)$ range for the family just described, so a bounded translation rate $|a(t)|\le a_{\max}$ gives $O(n)$ control time.
 
-The construction above is vulnerable if ordinary physical errors generate a spurious marked-state population. We therefore couple the pointer to an encoded logical flag through an error-transparent observable and state explicitly where that observable acts.
+\paragraph{Illustrative encoded interface (Appendix A).} The main results below do not depend on a particular error-transparent code construction. For concreteness, Appendix~\ref{app:interface} gives a fixed-size five-qubit illustration in which an encoded marked-state projector is replicated across correctable syndrome sectors, so that a stated class of correctable faults leaves the pointer translation exactly ideal. The example is illustrative only: it is not a threshold proof, and no scalable bounded-body realization is claimed.
+
+\section{Robustness transfer and conditional fault tolerance}
+
+We now separate the part specific to pilot-wave nonequilibrium from the conventional fault-tolerance input. Let $\mu_t$ denote the equilibrium measure on the full configuration space at time $t$, including the computer, any environment included in the model, and the pointer. Let $\rho_t$ be the actual nonequilibrium measure transported by the same Bohmian flow.
+
+\begin{table}[t]
+\caption{Notation used in the robustness and fault-tolerance bounds.}
+\label{tab:notation}
+\centering
+\begin{tabular}{@{}lp{0.70\linewidth}@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$p_*=2^{-n}$ & design Born weight of the unique marked state \\
+$H_{\rm dec}$, $\varepsilon_{\rm dec}$ & decision-spoiling history event and its equilibrium path-probability bound \\
+$H_{\rm rec}$, $\varepsilon_{\rm rec}$ & pre-readout record-leakage history event and its equilibrium path-probability bound \\
+$\eta$ & directly controlled nonequilibrium probability of larger pointer disturbances \\
+$L(n)$ & polynomial number of logical locations in the encoded computation \\
+$q_k$ & level-$k$ logical-location fault bound used in the conventional stochastic analysis \\
+$A$, $\theta=Aq_0$ & constants in the recursion $q_{j+1}\le Aq_j^2$, with $\theta<1$ \\
+$k$ & concatenation level \\
+$\lambda$, $m=\lambda\ln2$ & exponential-tail length scale and constant pointer-basin margin \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{lemma}[Event-bound transport]
+\label{lem:eventtransport}
+Suppose $\rho_0\ll\mu_0$ and
+\begin{equation}
+\frac{d\rho_0}{d\mu_0}\le C
+\qquad \mu_0\text{-almost everywhere}.
+\label{eq:initialRN}
+\end{equation}
+If $\rho_t$ and $\mu_t$ are pushforwards under the same pilot-wave flow, then for every later measurable configuration-space event $B$,
+\begin{equation}
+\rho_t(B)\le C\mu_t(B).
+\label{eq:eventBound}
+\end{equation}
+Equivalently, $d\rho_t/d\mu_t\le C$ $\mu_t$-almost everywhere.
+\end{lemma}
+
+\begin{proof}
+Let $\Phi_t$ denote the Bohmian flow on the full-measure set on which it is defined; global existence on such a set is known for broad classes of physically relevant Hamiltonians \cite{Berndl1995}. Common transport means
+\begin{equation}
+\rho_t=(\Phi_t)_\#\rho_0,
+\qquad
+\mu_t=(\Phi_t)_\#\mu_0.
+\end{equation}
+For a measurable event $B$,
+\begin{align}
+\rho_t(B)
+&=\rho_0(\Phi_t^{-1}(B))\\
+&=\int_{\Phi_t^{-1}(B)}\frac{d\rho_0}{d\mu_0}\,d\mu_0\\
+&\le C\mu_0(\Phi_t^{-1}(B))\\
+&=C\mu_t(B).
+\end{align}
+The Radon--Nikodym statement follows because the event inequality holds for every measurable $B$. In the usual differential description this is the same fact as advection of the ratio $\rho/|\Psi|^2$ by the Bohmian velocity field.
+\end{proof}
+
+For the pointer preparation in Section 4, condition the full equilibrium ensemble on the pointer event $A_*$:
+\begin{equation}
+\rho_0(q)=\frac4{p_*}\mathbf 1_{A_*}(y(q))\mu_0(q).
+\label{eq:fullconditioned}
+\end{equation}
+Since $\mu_0(A_*)=p_*/4$, this is normalized and
+\begin{equation}
+R(\rho_0\|\mu_0)=\ln\frac4{p_*},
+\qquad
+0\le\frac{d\rho_0}{d\mu_0}\le\frac4{p_*}.
+\label{eq:ratioBound}
+\end{equation}
+
+\medskip
+\noindent\textbf{Pre-readout record leakage.}
+Let $L$ denote the logical flag and let $E$ collect all ordinary equilibrium degrees of freedom that can act as records before the nonequilibrium pointer is coupled, including syndrome ancillas and any environment included in the implementation model. Exclude the nonequilibrium pointer itself from $E$. At the ordinary quantum level, let $\mathcal R_t$ denote the channel from the logical flag to the ordinary record subsystem $E$ induced by the implementation up to time $t$ before pointer readout. Exact record independence is the benchmark condition
+\begin{equation}
+\mathcal R_t\!\left(|0_L\rangle\langle0_L|\right)
+=
+\mathcal R_t\!\left(|1_L\rangle\langle1_L|\right)
+\qquad (t<t_{\rm read}).
+\label{eq:recordindependence}
+\end{equation}
+If $\sigma_E^{(b)}(t)$ is the ordinary-record state generated from logical value $b$, define the operational distinguishability diagnostic
+\begin{equation}
+\ell_E(t)=\frac12\left\|\sigma_E^{(0)}(t)-\sigma_E^{(1)}(t)\right\|_1.
+\label{eq:recordleakage}
+\end{equation}
+Equation~\eqref{eq:recordindependence} is equivalent to $\ell_E(t)=0$. More generally, for equal prior probabilities the optimal success probability for distinguishing the two logical values using a measurement on $E$ is $(1+\ell_E(t))/2$. Syndrome information is allowed: the record may depend on which correctable error occurred, provided that information is independent of the encoded logical value.
+
+For the Bohmian robustness theorem we use a stronger but directly usable event-level quantity. Let $H_{\rm rec}\subseteq\Gamma_T$ be a measurable set of histories on which Eq.~\eqref{eq:recordindependence} fails at some pre-readout time, and suppose
+\begin{equation}
+\mathbb P_\mu^T(H_{\rm rec})\le\varepsilon_{\rm rec}.
+\label{eq:recordeventbound}
+\end{equation}
+We call $\varepsilon_{\rm rec}$ the \emph{equilibrium record-leakage probability}. Outside $H_{\rm rec}$ the ordinary records are exactly independent of the marked/unmarked value until the nonequilibrium pointer is coupled. This permits a small amount of leakage without demanding exact independence on every physical history.
+
+The channel quantity $\ell_E(t)$ and the history probability $\varepsilon_{\rm rec}$ should not be conflated. A small trace distance by itself need not exhibit a measurable Bohmian bad-history set: record differences can be spread weakly across a set of order-one equilibrium measure rather than concentrated on an exceptional set of small path measure. This failure already occurs in the classical special case: two record distributions may differ by an $O(\delta)$ change in density throughout a region of unit measure, giving total-variation distance $O(\delta)$ without any event of measure $O(\delta)$ outside which the two records agree exactly. Conversely, if the physical record state admits a decomposition into a common logical-value-independent part of weight at least $1-\varepsilon_{\rm rec}$ plus a leakage part of weight at most $\varepsilon_{\rm rec}$, then convexity of trace distance gives $\ell_E(t)\le\varepsilon_{\rm rec}$. The main theorem requires the event-level bound in Eq.~\eqref{eq:recordeventbound}; Eq.~\eqref{eq:recordleakage} is an operational diagnostic that can be useful when a concrete model supplies such a decomposition.
+
+\medskip
+\noindent\textbf{History-event-realizable implementation.}
+Let $\Gamma_T$ denote the trajectory space generated by the Bohmian flow over the interval $[0,T]$, equipped with the $\sigma$-algebra generated by the evaluation maps $e_t(\gamma)=\gamma(t)$. Let
+\begin{equation}
+\Xi_T:q_0\longmapsto \bigl(t\mapsto\Phi_t(q_0)\bigr)
+\end{equation}
+be the measurable map from an initial configuration to its trajectory. The equilibrium and nonequilibrium path measures are
+\begin{equation}
+\mathbb P_\mu^T=(\Xi_T)_\#\mu_0,
+\qquad
+\mathbb P_\rho^T=(\Xi_T)_\#\rho_0.
+\label{eq:pathmeasures}
+\end{equation}
+We call an implementation \emph{history-event-realizable with decision-fault bound $\varepsilon_{\rm dec}$ and record-leakage bound $\varepsilon_{\rm rec}$} if there are measurable trajectory events $H_{\rm dec},H_{\rm rec}\subseteq\Gamma_T$ such that
+\begin{equation}
+\mathbb P_\mu^T(H_{\rm dec})\le\varepsilon_{\rm dec},
+\qquad
+\mathbb P_\mu^T(H_{\rm rec})\le\varepsilon_{\rm rec},
+\label{eq:historyrealizable}
+\end{equation}
+and every trajectory outside $H_{\rm dec}\cup H_{\rm rec}$ reaches the readout stage with the correct marked/unmarked logical value while satisfying Eq.~\eqref{eq:recordindependence}. We do not require the internal logical trajectory, syndrome history, or intermediate encoded state to coincide with the ideal computation; deviations are harmless whenever they leave both the final logical value and the record-independence condition intact. Thus $H_{\rm dec}$ contains histories that can spoil the promised final decision, whereas $H_{\rm rec}$ contains histories on which ordinary records acquire logical-value information before the special pointer readout. In equilibrium the marked outcome itself still has probability $p_*=2^{-n}$ on a unique-witness instance; that rarity is not counted as a decision fault. Equivalently, $H_{\rm dec}$ is the measurable set of implementation histories that spoil the intended basin-level decision under the specified nonequilibrium pointer preparation: on a one-witness instance they can prevent a prepared pointer trajectory from reaching the marked outcome, or on a no-witness instance they can generate a false marked outcome.
+
+\begin{lemma}[History-event likelihood-ratio bound]
+\label{lem:historyevent}
+Under the hypotheses of Lemma~\ref{lem:eventtransport}, every measurable $H\subseteq\Gamma_T$ obeys
+\begin{equation}
+\mathbb P_\rho^T(H)\le C\,\mathbb P_\mu^T(H).
+\label{eq:historybound}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By definition of the pushforward path measures,
+\begin{align}
+\mathbb P_\rho^T(H)
+&=\rho_0(\Xi_T^{-1}(H))\\
+&=\int_{\Xi_T^{-1}(H)}\frac{d\rho_0}{d\mu_0}\,d\mu_0\\
+&\le C\mu_0(\Xi_T^{-1}(H))\\
+&=C\,\mathbb P_\mu^T(H).
+\end{align}
+No final-time record is required. A final configuration-space event $B$ is the special case $H=e_T^{-1}(B)$.
+\end{proof}
+
+This is an event-level hypothesis on physical histories. A trace-distance or diamond-norm guarantee, or a norm bound on a coherent sum of fault paths, controls ordinary quantum statistics but does not by itself exhibit a measurable trajectory event with the property in Eq.~\eqref{eq:historyrealizable}. Establishing history-event realizability from a particular coherent-noise fault-tolerance theorem is therefore a separate physical step.
+
+\medskip
+\noindent\textbf{Example: trajectory-recorded stochastic faults.}
+The main transfer theorem below does not require a fault-pattern map. It requires only measurable decision-fault and record-leakage events with the equilibrium bounds in Eq.~\eqref{eq:historyrealizable}. A conventional stochastic fault model gives one concrete way to construct such events.
+
+Consider a finite noisy circuit with a conventional finite fault-pattern space $\Omega$ and a conventionally bad subset $\Omega_{\rm bad}\subseteq\Omega$. Suppose the physical Bohmian realization associates the conventionally bad decision patterns with a measurable trajectory event $H_{\rm dec}\subseteq\Gamma_T$ such that
+\begin{equation}
+\mathbb P_\mu^T(H_{\rm dec})\le \varepsilon_{\rm conv},
+\label{eq:stochasticbadset}
+\end{equation}
+If pre-readout logical-value leakage is represented by a second measurable event $H_{\rm rec}$ with $\mathbb P_\mu^T(H_{\rm rec})\le\varepsilon_{\rm rec}$, and every trajectory outside $H_{\rm dec}\cup H_{\rm rec}$ reaches the pointer readout with the correct marked/unmarked value while satisfying Eq.~\eqref{eq:recordindependence}, then the implementation is history-event-realizable with $\varepsilon_{\rm dec}=\varepsilon_{\rm conv}$ and the stated $\varepsilon_{\rm rec}$. No further stochastic structure is used by the transfer theorem.
+
+One sufficient microscopic realization is that the stochastic choices are represented, when they occur, by mutually disjoint measurable environment-configuration records. The sequence of such records can then determine measurable decision-fault and record-leakage history events. The records need not persist until time $T$: later erasure or recombination does not change whether the trajectory belongs to the corresponding history event. Persistent disjoint final records are only a special case. This is the usual Bohmian effective-wave-function situation, in which macroscopically separated environment configurations select one component of the total wave function and, in quantum equilibrium, the associated record statistics agree with Born weights \cite{DurrGoldsteinZanghi1992}.
+
+The adversarial independent stochastic model analyzed by Aliferis, Gottesman, and Preskill is a conventional source of $\varepsilon_{\rm conv}$ once such a physical bad-history realization has been established. In that model each circuit location is faulty independently with probability $\varepsilon$, while the action at selected faulty locations may be adversarial \cite{AliferisGottesmanPreskill2006}. The present argument needs only that the physical equilibrium path measure of the conventionally bad histories obey the same upper bound used in the stochastic analysis. It does not require exact probability matching for every individual fault pattern. The restriction to such event-realizable stochastic faults is substantive. Ref.~\cite{AliferisGottesmanPreskill2006} also develops a threshold theorem for local non-Markovian noise in which coherent sums of fault paths are controlled at the amplitude/operator-norm level. Such a coherent fault-path bound does not generally supply a measurable Bohmian bad-history event, so extending the present transfer theorem to that regime remains open.
+
+\begin{theorem}[Equilibrium-to-nonequilibrium robustness transfer]
+\label{thm:transfer}
+Let an implementation be history-event-realizable with decision-fault event $H_{\rm dec}$, record-leakage event $H_{\rm rec}$, and bounds $\varepsilon_{\rm dec},\varepsilon_{\rm rec}$ as in Eq.~\eqref{eq:historyrealizable}. For the nonequilibrium ensemble in Eq.~\eqref{eq:fullconditioned},
+\begin{equation}
+\mathbb P_\rho^T(H_{\rm dec}\cup H_{\rm rec})
+\le\frac{4(\varepsilon_{\rm dec}+\varepsilon_{\rm rec})}{p_*}.
+\label{eq:transferbound}
+\end{equation}
+If, in addition, pointer disturbances not represented in these events have directly bounded nonequilibrium probability at most $\eta$, then the total failure probability is at most
+\begin{equation}
+\Pr_{\rho}(\mathrm{implementation\ fault})
+\le \frac{4(\varepsilon_{\rm dec}+\varepsilon_{\rm rec})}{p_*}+\eta.
+\label{eq:transfereta}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By the equilibrium union bound and Eq.~\eqref{eq:historyrealizable},
+\begin{equation}
+\mathbb P_\mu^T(H_{\rm dec}\cup H_{\rm rec})
+\le\varepsilon_{\rm dec}+\varepsilon_{\rm rec}.
+\end{equation}
+Apply Lemma~\ref{lem:historyevent} with $C=4/p_*$ to that union. The second statement is the union bound with the separately controlled pointer-disturbance event.
+\end{proof}
+
+The theorem deliberately refers to measurable decision-fault and record-leakage events in trajectory space, not to a final macroscopic record. It therefore allows transient stochastic records that are later erased. It still does not provide a classical decomposition of a general unsyndromed coherent bath: a conventional fault-tolerance result is usable here only when its accuracy statement can be strengthened or interpreted as a history-event-realizable bound.
+
+For any architecture for which history-event realizability has been established, suppose a fault-tolerant encoded implementation has $L(n)=\operatorname{poly}(n)$ logical locations and the sum of its equilibrium decision-fault and record-leakage bounds obeys
+\begin{equation}
+\varepsilon_{\rm dec,k}(n)+\varepsilon_{\rm rec,k}(n)\le L(n)q_k,
+\qquad
+q_{j+1}\le A q_j^2,
+\qquad
+\theta=Aq_0<1,
+\label{eq:FTinput}
+\end{equation}
+where $q_k$ is an upper bound on the level-$k$ logical-location fault probability used to bound the union of histories that can spoil the final marked/unmarked value and histories with pre-readout record leakage. This is deliberately conservative: faults that perturb the internal computation but are later corrected and leave both of those quantities intact need not belong to $H_{\rm dec}\cup H_{\rm rec}$. For adversarial independent stochastic faults, concatenated distance-three analyses give this double-exponential scaling below threshold \cite{AliferisGottesmanPreskill2006}. In the present corollary the conventional fault-tolerance calculation and the Bohmian transfer remain distinct: the former supplies a bound on $\varepsilon_{\rm dec,k}+\varepsilon_{\rm rec,k}$, while history-event realizability is a separate physical condition on the implementation. The stochastic construction above is one sufficient example, not part of the corollary itself.
+
+\begin{corollary}[Conditional fault-tolerance scaling]
+\label{cor:FT}
+Assume an encoded implementation is history-event-realizable and satisfies Eq.~\eqref{eq:FTinput}. Thus, outside $H_{\rm dec}\cup H_{\rm rec}$, the correct marked/unmarked logical value is presented to the nonequilibrium pointer and the pre-readout record-independence condition in Eq.~\eqref{eq:recordindependence} holds. Then for any fixed $\delta\in(0,1)$, the logical contribution to the nonequilibrium implementation-fault probability can be made at most $\delta$ with $k=O(\log n)$ concatenation levels. If the cost of one level multiplies each logical location by a constant factor $M$, the total logical fault-tolerance overhead remains polynomial.
+\end{corollary}
+
+\begin{proof}
+Iteration of the recursion in Eq.~\eqref{eq:FTinput} gives
+\begin{equation}
+q_k\le\frac1A\theta^{2^k},
+\end{equation}
+and therefore
+\begin{equation}
+\varepsilon_{\rm dec,k}(n)+\varepsilon_{\rm rec,k}(n)
+\le\frac{L(n)}A\theta^{2^k}.
+\label{eq:epsilonk}
+\end{equation}
+Theorem~\ref{thm:transfer} gives
+\begin{equation}
+\mathbb P_{\rho}^{T}(H_{\rm dec,n,k}\cup H_{\rm rec,n,k})
+\le\frac{4L(n)}{A p_*}\theta^{2^k}.
+\label{eq:neqbad}
+\end{equation}
+Since $p_*=2^{-n}$, it suffices to choose
+\begin{equation}
+2^k\ge
+\frac{n\ln2+\ln\!\left(4L(n)/(A\delta)\right)}{-\ln\theta}.
+\label{eq:kbound}
+\end{equation}
+For polynomial $L(n)$ the numerator is $O(n)$, so $k=O(\log n)$. The implementation cost is then
+\begin{equation}
+L(n)M^k=\operatorname{poly}(n).
+\end{equation}
+The elementary physical error strength in the conventional fault model remains fixed below its threshold; the nonequilibrium resource cost remains $n\ln2+\ln4$.
+\end{proof}
+
+The record-leakage term is quantitatively constrained in the same way as ordinary decision faults. For bounded total nonequilibrium failure it is sufficient that $\varepsilon_{\rm rec,k}=O(p_*)$ after suppression (and likewise for $\varepsilon_{\rm dec,k}$). Achieving this with only $O(\log n)$ concatenation levels requires record leakage itself to obey a comparably strong suppression law; that is an additional architectural assumption, not a consequence of the standard logical-error recursion. A small channel distinguishability $\ell_E(t)$ alone does not establish the required event-level scaling.
+
+The content of Corollary~\ref{cor:FT} is intentionally conditional in two distinct senses. First, the conventional encoded architecture must satisfy the scaling in Eq.~\eqref{eq:FTinput} for the sum of decision-fault and record-leakage probabilities. Second, those two error classes must be history-event-realizable in the sense of Eq.~\eqref{eq:historyrealizable}; ordinary channel closeness alone is not enough for the transfer theorem. The five-qubit illustration in Appendix~\ref{app:interface} proves exact transparency for its stated base interaction and fault class, but it does not prove that a bounded-body concatenated implementation of that readout satisfies either requirement. Nor should unencoded continuous-pointer faults simply be inserted into $q_0$: concatenating the qubit code does not by itself suppress such faults. Bounded pointer disturbances are instead covered by the constant physical margin in Eq.~\eqref{eq:pointermargin}; rarer larger disturbances may be represented by the separate term $\eta$ in Eq.~\eqref{eq:transfereta} when their probability is controlled directly in the actual nonequilibrium dynamics.
+
+\section{Scope, limitations, and complexity consequence}
+
+Several qualifications are essential. The principal limitation of the fault-tolerance corollary is its noise model. The transfer theorem applies directly when implementation failures and record-leakage failures are measurable Bohmian history events with small equilibrium path probability, as in the event-realizable independent-stochastic regime discussed above. Ref.~\cite{AliferisGottesmanPreskill2006} also treats local non-Markovian noise by bounding coherent sums of fault paths. Those amplitude-level bounds do not in general define measurable bad-history events, so extending the present transfer argument to that more general coherent-noise setting is an open problem.
+
+First, Eq.~\eqref{eq:resource} is an information-theoretic resource measure. It is natural because it is additive and invariant under reversible pilot-wave transport, and because Lemma 1 supplies a matching lower bound. It does not include the unknown physical cost of producing, isolating, or maintaining nonequilibrium matter. The results are conditional on access to the specified pointer ensemble.
+
+Second, Theorem~\ref{thm:transfer} needs only measurable decision-fault and record-leakage events in Bohmian trajectory space and their equilibrium path probabilities. Their complement is defined by the final readout conditions, not by exact agreement with an ideal internal computation. It therefore permits arbitrary intermediate deviations that are corrected before readout, provided they neither spoil the final marked/unmarked value nor create a record-leakage history. It does not assume that microscopic fault paths become disjoint classical alternatives. The genuinely physical inputs are that the full equilibrium and nonequilibrium ensembles are transported by the same Bohmian flow and that the implementation admits the measurable history events $H_{\rm dec}$ and $H_{\rm rec}$ required by Eq.~\eqref{eq:historyrealizable}. A conventional trace-distance, diamond-norm, or coherent fault-path estimate is not automatically such an event-level statement. The trajectory-recorded stochastic construction above gives one explicit sufficient realization, but the theorem itself requires no fault-pattern map.
+
+Third, Corollary~\ref{cor:FT} does not establish a threshold for the specific error-transparent readout illustrated in Appendix~\ref{app:interface}. The constant $A$, the base error parameter $q_0$, the history-event-realizability property, and the existence of a bounded-body gadget satisfying Eq.~\eqref{eq:FTinput} would all have to be derived for a concrete architecture. In particular, pointer faults and control errors acting on an unencoded continuous coordinate are not automatically suppressed by concatenating the qubit code. The exponential-tail construction instead gives an $n$-independent physical margin for bounded pointer disturbances; larger disturbances require a separate direct bound such as $\eta$.
+
+Fourth, pre-readout record leakage is quantified by $\varepsilon_{\rm rec}$. Exact record independence in Eq.~\eqref{eq:recordindependence} is required only outside the measurable leakage event $H_{\rm rec}$. Ordinary equilibrium syndrome or environment records may identify correctable error information, but the induced record channel must be independent of the encoded marked/unmarked value until the nonequilibrium pointer is coupled. The Knill--Laflamme structure supplies this property within the abstract correctable syndrome decomposition: the syndrome factor can depend on the error while remaining independent of the logical state. A microscopic implementation may nevertheless leak logical information into uncontrolled environmental modes. Showing that such leakage is confined to a history event of probability $\varepsilon_{\rm rec,k}$ that obeys the required suppression law is therefore a strong, nontrivial architectural condition and is not implied by standard logical fault-tolerance estimates.
+
+Fifth, the error-transparent base operator has been defined exactly on the included syndrome sectors, but we have not derived a scalable realization from a restricted microscopic Hamiltonian. Known error-transparent constructions require higher-body interactions in general \cite{VyWangJacobs2013}. At higher concatenation levels, decomposing encoded readout operations into two-body or other bounded-body primitives introduces additional locations and can spoil exact transparency. Establishing a complete local architecture with both a conventional threshold and sufficiently small pre-readout record leakage is therefore an open problem rather than a consequence claimed here.
+
+Finally, the unique-witness promise and the randomized nature of the complexity consequence should be kept distinct. Valiant and Vazirani construct randomized polynomial-time isolation reductions with the following properties: if the original SAT formula is unsatisfiable, every derived formula is unsatisfiable; if it is satisfiable, a derived formula has a unique satisfying assignment with inverse-polynomial probability \cite{ValiantVazirani1986}. The promise solver may behave arbitrarily on derived formulas with more than one solution. Repeating the isolation procedure and amplifying the solver's bounded error gives a randomized polynomial-time decision procedure for SAT using the assumed subquantum primitive; with one-sided error on zero instances it gives the corresponding RP-type procedure. This is a statement about randomized polynomial time in the enlarged computational model, not a claim that ordinary BPP contains NP. Once a SAT decision procedure is available, a satisfying assignment can be recovered by the standard polynomial-time self-reduction that fixes variables one at a time. The present note establishes only the resource scaling of the zero-versus-one primitive used in this implication.
+
+\section{Conclusion}
+
+For a marked state with design weight $p_*=2^{-n}$, exponentially small equilibrium probability does not by itself imply an exponential nonequilibrium resource. Conditioning a pilot-wave pointer on an appropriate cumulative-probability shell gives deterministic marked-state selection on the unique-witness case at relative-entropy cost
+\begin{equation}
+R=n\ln2+O(1),
+\end{equation}
+and the data-processing argument shows that linear scaling is optimal for constant-probability selection in this resource measure.
+
+The robustness result can be stated without requiring fault records to survive until the final time. The initial likelihood-ratio bound transfers directly to every measurable event in Bohmian trajectory space. For the pointer ensemble used here, equilibrium decision-fault and record-leakage probabilities $\varepsilon_{\rm dec}$ and $\varepsilon_{\rm rec}$ therefore contribute at most $4(\varepsilon_{\rm dec}+\varepsilon_{\rm rec})/p_*$ in nonequilibrium. The complementary histories need not reproduce the ideal internal computation; they need only deliver the correct marked/unmarked value to the pointer while satisfying exact record independence. A history-event-realizable fault-tolerant implementation for which $\varepsilon_{\rm dec,k}+\varepsilon_{\rm rec,k}$ decreases as $\operatorname{poly}(n)\theta^{2^k}$ consequently needs only $k=O(\log n)$ concatenation levels to overcome the $O(2^n)$ nonequilibrium amplification. Trajectory-recorded independent stochastic faults provide one explicit sufficient example, but the transfer theorem itself requires only a measurable bad-history event with the stated equilibrium path-probability bound. This is a transfer theorem and a conditional corollary, not a threshold proof for the specific readout hardware or for general coherent noise.
+
+The five-qubit illustration in Appendix~\ref{app:interface} shows how exact pointer translation can coexist with correctable syndrome information at a fixed base interface. The exponential-tail pointer construction separately shows that bounded analog disturbances can be tolerated with an $n$-independent physical margin. What remains open is the physical synthesis of these ingredients: a strictly bounded-body, scalable readout architecture that simultaneously has a conventional fault-tolerance threshold, keeps pre-readout record leakage small enough until the nonequilibrium pointer interaction, and controls larger pointer disturbances directly. Thus the information-resource scaling is polynomial under explicit conditions, while the principal unresolved questions are architectural and physical rather than information-theoretic.
+
+\clearpage
+\appendix
+
+\section{Illustration: a fixed-size error-transparent pointer interface}\label{app:interface}
+
+This appendix is an illustration rather than an ingredient of the main resource and robustness theorems. It shows, at fixed size, how one can couple a pointer to an encoded logical flag through an error-transparent observable so that a stated class of correctable faults preserves the ideal pointer translation exactly. The construction does not establish a scalable bounded-body fault-tolerant readout architecture.
 
 For concreteness, take the nondegenerate five-qubit perfect code $[[5,1,3]]$, which corrects an arbitrary error on one physical qubit \cite{Laflamme1996}. The same construction works for any fixed nondegenerate distance-three subspace code. Let $\mathcal C$ be its two-dimensional code space and let $P_{\mathcal C}$ be the code projector. Let $E_0=I$ and let $E_1,\ldots,E_{15}$ be the fifteen single-qubit Pauli errors. Nondegeneracy and distance three give
 \begin{equation}
@@ -305,163 +598,12 @@ commutes with the encoded pointer evolution on $\mathcal K$. Any sequence of suc
 
 Syndrome extraction records which included sector is occupied without learning the logical value. This is the information-theoretic content of the Knill--Laflamme condition: within the correctable error algebra, the syndrome factor is independent of the encoded state \cite{KnillLaflamme1997}. Measurements of stabilizer syndromes also decohere coherent local error components toward stochastic Pauli-like logical noise \cite{Beale2018}.
 
-Equation~\eqref{eq:ETH} is an exact fixed-size base interaction, not by itself a scalable hardware construction. Error-transparent evolution generally requires higher-body interactions \cite{VyWangJacobs2013}. At higher concatenation levels a logical readout acts on an encoded block, and decomposing that readout into bounded-body microscopic operations introduces additional locations whose exact Bohmian transparency is not established by Eq.~\eqref{eq:transparentidentity}. We therefore do not infer a threshold for this particular interface directly from a conventional concatenated-code threshold theorem. Instead, the next section separates the general pilot-wave robustness statement from a conditional fault-tolerance corollary. The corollary applies to any encoded architecture that supplies a conventional Born-rule failure bound while keeping the marked/unmarked logical value opaque to ordinary equilibrium records until the nonequilibrium pointer acquires it. Constructing such an architecture from strictly bounded-body interactions is an open problem.
+Equation~\eqref{eq:ETH} is an exact fixed-size base interaction, not by itself a scalable hardware construction. Error-transparent evolution generally requires higher-body interactions \cite{VyWangJacobs2013}. At higher concatenation levels a logical readout acts on an encoded block, and decomposing that readout into bounded-body microscopic operations introduces additional locations whose exact Bohmian transparency is not established by Eq.~\eqref{eq:transparentidentity}. We therefore do not infer a threshold for this particular interface directly from a conventional concatenated-code threshold theorem. The main text instead treats fault tolerance abstractly through history-event-realizable decision-fault and record-leakage bounds. Constructing a scalable version of the present illustration from strictly bounded-body interactions, while suppressing pre-readout record leakage until the nonequilibrium pointer readout, remains an open problem.
 
-\section{Robustness transfer and conditional fault tolerance}
-
-We now separate the part specific to pilot-wave nonequilibrium from the conventional fault-tolerance input. Let $\mu_t$ denote the equilibrium measure on the full configuration space at time $t$, including the computer, any environment included in the model, and the pointer. Let $\rho_t$ be the actual nonequilibrium measure transported by the same Bohmian flow.
-
-\begin{lemma}[Event-bound transport]
-\label{lem:eventtransport}
-Suppose $\rho_0\ll\mu_0$ and
-\begin{equation}
-\frac{d\rho_0}{d\mu_0}\le C
-\qquad \mu_0\text{-almost everywhere}.
-\label{eq:initialRN}
-\end{equation}
-If $\rho_t$ and $\mu_t$ are pushforwards under the same pilot-wave flow, then for every later measurable configuration-space event $B$,
-\begin{equation}
-\rho_t(B)\le C\mu_t(B).
-\label{eq:eventBound}
-\end{equation}
-Equivalently, $d\rho_t/d\mu_t\le C$ $\mu_t$-almost everywhere.
-\end{lemma}
-
-\begin{proof}
-Let $\Phi_t$ denote the Bohmian flow, on the full-measure set on which it is defined. Common transport means
-\begin{equation}
-\rho_t=(\Phi_t)_\#\rho_0,
-\qquad
-\mu_t=(\Phi_t)_\#\mu_0.
-\end{equation}
-For a measurable event $B$,
-\begin{align}
-\rho_t(B)
-&=\rho_0(\Phi_t^{-1}(B))\\
-&=\int_{\Phi_t^{-1}(B)}\frac{d\rho_0}{d\mu_0}\,d\mu_0\\
-&\le C\mu_0(\Phi_t^{-1}(B))\\
-&=C\mu_t(B).
-\end{align}
-The Radon--Nikodym statement follows because the event inequality holds for every measurable $B$. In the usual differential description this is the same fact as advection of the ratio $\rho/|\Psi|^2$ by the Bohmian velocity field.
-\end{proof}
-
-For the pointer preparation in Section 4, condition the full equilibrium ensemble on the pointer event $A_*$:
-\begin{equation}
-\rho_0(q)=\frac4{p_*}\mathbf 1_{A_*}(y(q))\mu_0(q).
-\label{eq:fullconditioned}
-\end{equation}
-Since $\mu_0(A_*)=p_*/4$, this is normalized and
-\begin{equation}
-R(\rho_0\|\mu_0)=\ln\frac4{p_*},
-\qquad
-0\le\frac{d\rho_0}{d\mu_0}\le\frac4{p_*}.
-\label{eq:ratioBound}
-\end{equation}
-
-\begin{theorem}[Equilibrium-to-nonequilibrium robustness transfer]
-\label{thm:transfer}
-Let $F$ be a measurable final configuration-space event containing every logical or readout failure of an implementation, and suppose its equilibrium Born probability satisfies
-\begin{equation}
-\mu_T(F)\le\varepsilon.
-\end{equation}
-For the nonequilibrium ensemble in Eq.~\eqref{eq:fullconditioned},
-\begin{equation}
-\rho_T(F)\le\frac{4\varepsilon}{p_*}.
-\label{eq:transferbound}
-\end{equation}
-If, in addition, pointer disturbances not represented in $F$ have directly bounded nonequilibrium probability at most $\eta$, then the total failure probability is at most
-\begin{equation}
-\Pr_{\rho}(\mathrm{failure})
-\le \frac{4\varepsilon}{p_*}+\eta.
-\label{eq:transfereta}
-\end{equation}
-\end{theorem}
-
-\begin{proof}
-Apply Lemma~\ref{lem:eventtransport} with $C=4/p_*$ to $F$. The second statement is the union bound between $F$ and the separately controlled pointer-disturbance event.
-\end{proof}
-
-The theorem deliberately refers only to a final failure event. It does not require physical fault histories to be disjoint Bohmian alternatives, nor does it require a classical decomposition of an unsyndromed coherent bath. All such questions are delegated to whatever conventional analysis supplies the equilibrium probability $\varepsilon$.
-
-As one important sufficient case, suppose a fault-tolerant encoded implementation has $L(n)=\operatorname{poly}(n)$ logical locations and its conventional equilibrium analysis yields
-\begin{equation}
-\varepsilon_k(n)\le L(n)q_k,
-\qquad
-q_{j+1}\le A q_j^2,
-\qquad
-\theta=Aq_0<1,
-\label{eq:FTinput}
-\end{equation}
-where $q_k$ is an upper bound on the level-$k$ logical-location failure probability. The standard concatenated distance-three analysis gives this double-exponential form for suitable fault models below threshold \cite{AliferisGottesmanPreskill2006}; here it is used only as a conventional Born-rule input.
-
-\begin{corollary}[Conditional fault-tolerance scaling]
-\label{cor:FT}
-Assume an encoded implementation satisfies Eq.~\eqref{eq:FTinput}, and assume that outside its final failure event the computation is logically correct and no ordinary equilibrium record has acquired the marked/unmarked logical value before the nonequilibrium pointer readout. Then for any fixed $\delta\in(0,1)$, the logical contribution to nonequilibrium failure can be made at most $\delta$ with $k=O(\log n)$ concatenation levels. If the cost of one level multiplies each logical location by a constant factor $M$, the total logical fault-tolerance overhead remains polynomial.
-\end{corollary}
-
-\begin{proof}
-Iteration of the recursion in Eq.~\eqref{eq:FTinput} gives
-\begin{equation}
-q_k\le\frac1A\theta^{2^k},
-\end{equation}
-and therefore
-\begin{equation}
-\varepsilon_k(n)
-\le\frac{L(n)}A\theta^{2^k}.
-\label{eq:epsilonk}
-\end{equation}
-Theorem~\ref{thm:transfer} gives
-\begin{equation}
-\Pr_{\rho}(F_{n,k})
-\le\frac{4L(n)}{A p_*}\theta^{2^k}.
-\label{eq:neqbad}
-\end{equation}
-Since $p_*=2^{-n}$, it suffices to choose
-\begin{equation}
-2^k\ge
-\frac{n\ln2+\ln\!\left(4L(n)/(A\delta)\right)}{-\ln\theta}.
-\label{eq:kbound}
-\end{equation}
-For polynomial $L(n)$ the numerator is $O(n)$, so $k=O(\log n)$. The implementation cost is then
-\begin{equation}
-L(n)M^k=\operatorname{poly}(n).
-\end{equation}
-The elementary physical error strength in the conventional fault model remains fixed below its threshold; the nonequilibrium resource cost remains $n\ln2+\ln4$.
-\end{proof}
-
-The content of Corollary~\ref{cor:FT} is intentionally conditional. The five-qubit construction of Section 5 proves exact transparency for its stated base interaction and fault class, but it does not prove that a bounded-body concatenated implementation of that readout satisfies Eq.~\eqref{eq:FTinput}. Nor should unencoded continuous-pointer faults simply be inserted into $q_0$: concatenating the qubit code does not by itself suppress such faults. Bounded pointer disturbances are instead covered by the constant physical margin in Eq.~\eqref{eq:pointermargin}; rarer larger disturbances may be represented by the separate term $\eta$ in Eq.~\eqref{eq:transfereta} when their probability is controlled directly in the actual nonequilibrium dynamics.
-
-\section{Scope, limitations, and complexity consequence}
-
-Several qualifications are essential.
-
-First, Eq.~\eqref{eq:resource} is an information-theoretic resource measure. It is natural because it is additive and invariant under reversible pilot-wave transport, and because Lemma 1 supplies a matching lower bound. It does not include the unknown physical cost of producing, isolating, or maintaining nonequilibrium matter. The results are conditional on access to the specified pointer ensemble.
-
-Second, Theorem~\ref{thm:transfer} is more general than the earlier fault-history formulation: it needs only a measurable final failure event and its equilibrium Born probability. It does not assume that microscopic fault paths become disjoint classical alternatives. The genuinely physical input is instead that the full equilibrium and nonequilibrium ensembles are transported by the same Bohmian flow, together with a conventional analysis that supplies a bound on the final Born-rule failure probability.
-
-Third, Corollary~\ref{cor:FT} does not establish a threshold for the specific error-transparent readout in Section 5. The constant $A$, the base error parameter $q_0$, and the existence of a bounded-body gadget satisfying Eq.~\eqref{eq:FTinput} would have to be derived for a concrete architecture. In particular, pointer faults and control errors acting on an unencoded continuous coordinate are not automatically suppressed by concatenating the qubit code. The exponential-tail construction instead gives an $n$-independent physical margin for bounded pointer disturbances; larger disturbances require a separate direct bound such as $\eta$.
-
-Fourth, logical opacity remains an architectural requirement. Ordinary equilibrium syndrome or environment records may identify correctable error information, but they must not acquire the marked/unmarked logical value before the nonequilibrium pointer is the first readout carrying that information. The Knill--Laflamme structure supplies this opacity within the correctable syndrome decomposition, but extending it through a complete local fault-tolerant readout is part of the open implementation problem.
-
-Fifth, the error-transparent base operator has been defined exactly on the included syndrome sectors, but we have not derived a scalable realization from a restricted microscopic Hamiltonian. Known error-transparent constructions require higher-body interactions in general \cite{VyWangJacobs2013}. At higher concatenation levels, decomposing encoded readout operations into two-body or other bounded-body primitives introduces additional locations and can spoil exact transparency. Establishing a complete local architecture with both a conventional threshold and the required logical opacity is therefore an open problem rather than a consequence claimed here.
-
-Finally, the unique-witness promise and the randomized nature of the complexity consequence should be kept distinct. Valiant and Vazirani construct randomized polynomial-time isolation reductions with the following properties: if the original SAT formula is unsatisfiable, every derived formula is unsatisfiable; if it is satisfiable, a derived formula has a unique satisfying assignment with inverse-polynomial probability \cite{ValiantVazirani1986}. The promise solver may behave arbitrarily on derived formulas with more than one solution. Repeating the isolation procedure and amplifying the solver's bounded error gives a randomized polynomial-time decision procedure for SAT using the assumed subquantum primitive; with one-sided error on zero instances it gives the corresponding RP-type procedure. This is a statement about randomized polynomial time in the enlarged computational model, not a claim that ordinary BPP contains NP. Once a SAT decision procedure is available, a satisfying assignment can be recovered by the standard polynomial-time self-reduction that fixes variables one at a time. The present note establishes only the resource scaling of the zero-versus-one primitive used in this implication.
-
-\section{Conclusion}
-
-For a marked state with design weight $p_*=2^{-n}$, exponentially small equilibrium probability does not by itself imply an exponential nonequilibrium resource. Conditioning a pilot-wave pointer on an appropriate cumulative-probability shell gives deterministic marked-state selection on the unique-witness case at relative-entropy cost
-\begin{equation}
-R=n\ln2+O(1),
-\end{equation}
-and the data-processing argument shows that linear scaling is optimal for constant-probability selection in this resource measure.
-
-The robustness result can be stated without enumerating pilot-wave fault histories. Common Bohmian transport preserves an initial likelihood-ratio bound at the level of every later measurable event. For the pointer ensemble used here, any final event with equilibrium probability $\varepsilon$ therefore has nonequilibrium probability at most $4\varepsilon/p_*$. A conventional fault-tolerant implementation whose Born-rule failure probability decreases as $\operatorname{poly}(n)\theta^{2^k}$ consequently needs only $k=O(\log n)$ concatenation levels to overcome the $O(2^n)$ nonequilibrium amplification. This is a transfer theorem and a conditional corollary, not a threshold proof for the specific readout hardware.
-
-The five-qubit error-transparent construction shows how exact pointer translation can coexist with correctable syndrome information at a fixed base interface. The exponential-tail pointer construction separately shows that bounded analog disturbances can be tolerated with an $n$-independent physical margin. What remains open is the physical synthesis of these ingredients: a strictly bounded-body, scalable readout architecture that simultaneously has a conventional fault-tolerance threshold, keeps the logical marked/unmarked value opaque to ordinary equilibrium records until the nonequilibrium pointer interaction, and controls larger pointer disturbances directly. Thus the information-resource scaling is polynomial under explicit conditions, while the principal unresolved questions are architectural and physical rather than information-theoretic.
 
 \section{Use of generative AI and author contributions}
 
-Most of the exploratory derivation and most of the first-draft manuscript text were produced through an extended interactive use of OpenAI ChatGPT (GPT-5.6 Sol) in September--October 2026. The model proposed and developed several intermediate constructions, including the cumulative-probability-conditioned marked-state pointer argument and the error-transparent fault-tolerance analysis, in response to the author's prompts and critiques. The human author supplied the research question, introduced the branchwise nonlinear-gate idea that motivated the search for a digital marked-state amplifier, repeatedly challenged intermediate claims, directed the successive refinements, selected the scope and claims retained here, and is the sole accountable author. ChatGPT is not listed as an author. The author takes responsibility for the accuracy, integrity, and originality of the submitted manuscript and for verification of the mathematical arguments and references.
+Most of the exploratory derivation and most of the first-draft manuscript text were produced through an extended interactive use of OpenAI ChatGPT (GPT-5.6 Sol) in September--October 2026. The model proposed and developed several intermediate constructions, including the cumulative-probability-conditioned marked-state pointer argument and the error-transparent fault-tolerance analysis, in response to the author's prompts and critiques. The human author supplied the research question, introduced the branchwise nonlinear-gate idea that motivated the search for a digital marked-state amplifier, repeatedly challenged intermediate claims, directed the successive refinements, selected the scope and claims retained here, and is the sole accountable author. ChatGPT is not listed as an author. The author takes responsibility for the manuscript and its final scientific claims.
 
 \section*{Statements and Declarations}
 
@@ -475,6 +617,9 @@ Most of the exploratory derivation and most of the first-draft manuscript text w
 
 \medskip
 \noindent\textbf{Ethics approval and consent to participate.} Not applicable; this work is theoretical and involved no human participants or animals.
+
+\medskip
+\noindent\textbf{Code availability.} A Lean~4 + Mathlib formalization accompanies the project repository. The Lean sources machine-check the main measure-theoretic and arithmetic claims: the closed form $R=n\ln2+\ln4$ in Eq.~\eqref{eq:linearresource}; the binary Kullback--Leibler expansion underlying Lemma~1; the Radon--Nikodym event-bound of Lemma~\ref{lem:eventtransport}, together with its trajectory-space specialization matching Lemma~\ref{lem:historyevent}; the concatenation iteration $q_k\le A^{-1}\theta^{2^k}$ and the arithmetic giving failure $\le\delta$ at $k=O(\log n)$ in the proof of Corollary~\ref{cor:FT}; the constant pointer-margin identities of Lemma~\ref{lem:pointermargin}; and the operator-algebraic content of Appendix~\ref{app:interface}, including the intertwining identity Eq.~\eqref{eq:intertwine}, the polynomial and exponential forms of Eq.~\eqref{eq:transparentidentity}, and the syndrome-only commutation Eq.~\eqref{eq:syndromeonly} together with its pull-back through the isometry $W$. The formalization does not formalize the physical inputs: common Bohmian transport, history-event realizability of fault events, pilot-wave trajectory dynamics, and the monotonicity lift from $d(c\|p)$ to $d(r\|p)$ on $r\in[c,1]$ enter the Lean development as hypotheses.
 
 \begin{thebibliography}{99}
 
@@ -504,6 +649,12 @@ Aliferis, P., Gottesman, D., Preskill, J.: Quantum accuracy threshold for concat
 
 \bibitem{Beale2018}
 Beale, S.J., Wallman, J.J., Guti\'errez, M., Brown, K.R., Laflamme, R.: Quantum error correction decoheres noise. Phys. Rev. Lett. \textbf{121}, 190501 (2018). \url{https://doi.org/10.1103/PhysRevLett.121.190501}
+
+\bibitem{DurrGoldsteinZanghi1992}
+D\"urr, D., Goldstein, S., Zangh\`i, N.: Quantum equilibrium and the origin of absolute uncertainty. J. Stat. Phys. \textbf{67}, 843--907 (1992). \url{https://doi.org/10.1007/BF01049004}
+
+\bibitem{Berndl1995}
+Berndl, K., D\"urr, D., Goldstein, S., Peruzzi, G., Zangh\`i, N.: On the global existence of Bohmian mechanics. Commun. Math. Phys. \textbf{173}, 647--673 (1995). \url{https://doi.org/10.1007/BF02101714}
 
 \end{thebibliography}
 
