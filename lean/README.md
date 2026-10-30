@@ -34,18 +34,30 @@ principles.
     Requires a complete normed ℝ-algebra.
 - `Subquantum.MeasureBound` — the measure-theoretic content of (A4) +
   Eq. (eq:ratioBound):
+  - `event_bound_of_rnDeriv_le`: from a *pointwise* density bound
+    `rnDeriv ρ μ ≤ C` (μ-a.e.) and absolute continuity `ρ ≪ μ`, derives
+    the *event-level* bound `ρ(E) ≤ C · μ(E)` for every set `E`. This
+    is the step from the manuscript's "the ratio ρ/|Ψ|² is transported
+    unchanged" (pointwise statement) to Eq. (eq:eventBound)
+    `Pr_ρ(B) ≤ (4/p_*) · Pr_μ(B)`. Pure Radon–Nikodym integration.
   - `failure_bound_measure_theoretic`: in an abstract measurable space
     `Ω` with equilibrium measure `μ` and nonequilibrium measure `ρ`
-    satisfying `ρ(E) ≤ C · μ(E)` (the density-bound content of
-    (eq:ratioBound)), and fault events `B : Fin L → Set Ω` covering a
-    failure set `F ⊆ ⋃ᵢ Bᵢ`, we have `ρ(F) ≤ C · Σᵢ μ(Bᵢ)`. Specializing
-    to `C = 4/p_*` and uniform `μ(Bᵢ) ≤ q_k` recovers Eq. (eq:neqbad).
+    satisfying the event-level density bound `ρ(E) ≤ C · μ(E)`, and
+    fault events `B : Fin L → Set Ω` covering a failure set
+    `F ⊆ ⋃ᵢ Bᵢ`, we have `ρ(F) ≤ C · Σᵢ μ(Bᵢ)`. Specializing to
+    `C = 4/p_*` and uniform `μ(Bᵢ) ≤ q_k` recovers Eq. (eq:neqbad).
   - `failure_bound_uniform`: uniform version `ρ(F) ≤ C · L · q`.
-  - What this does **not** do: justify that fault histories admit the
-    measurable structure (that is the physics content of (A4)). The
-    formalization isolates exactly what (A4) is being asked to buy: an
-    abstract measurable-space structure. Granting that, the failure
-    bound is two lines of measure theory.
+  - `failure_bound_from_rnDeriv`: end-to-end composition — a pointwise
+    density bound + measurable fault events ⟹ union-bounded failure
+    estimate (manuscript's chain (eq:ratioBound) + (eq:union)
+    ⟹ (eq:neqbad)).
+  - What this does **not** do: justify that the pilot-wave flow
+    actually preserves the pointwise density bound (that is the
+    physics content of pilot-wave Radon–Nikodym transport) or that
+    fault histories admit the measurable structure (A4). What it
+    isolates: exactly those two physical inputs are what the
+    reviewer is being asked to grant; everything downstream is
+    measure theory.
 - `Subquantum.SyndromeOnly` — the syndrome-only transparency class of
   Eq. (eq:syndromeonly):
   - `commute_of_syndromeOnly_codeOnly`: in the tensor-product model
@@ -107,5 +119,5 @@ lake build
 ## Status
 
 Verified: `lake build` succeeds against Lean `v4.36.0-rc2` and current
-mathlib `master` (6444 jobs, exit 0). Remaining diagnostics are advisory
+mathlib `master` (6816 jobs, exit 0). Remaining diagnostics are advisory
 mathlib `module`-system warnings only — no errors.

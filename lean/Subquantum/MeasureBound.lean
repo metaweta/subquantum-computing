@@ -1,4 +1,5 @@
 import Mathlib.MeasureTheory.Measure.MeasureSpace
+import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.Tactic
 
 /-!
@@ -37,6 +38,38 @@ Granting that, the failure bound follows by two lines of measure theory.
 namespace Subquantum
 
 open MeasureTheory ENNReal
+
+/-! ### From Radon–Nikodym derivative bound to event-level bound
+
+The step in the manuscript from "the ratio `ρ/|Ψ|²` is transported
+unchanged along the pilot-wave flow, so the essential-supremum bound
+`ρ/|Ψ|² ≤ 4/p_*` holds at all later times" (pointwise statement) to
+Eq.~(eq:eventBound) `Pr_ρ(B) ≤ (4/p_*) Pr_μ(B)` (event-level statement)
+is a Radon–Nikodym fact: an a.e. pointwise bound on the density integrates
+to an event-level bound. This is formalized below. The pilot-wave
+transport of the density itself is physics and remains hypothetical. -/
+
+/-- **Pointwise density bound ⟹ event bound.**
+If `ρ ≪ μ` and `rnDeriv ρ μ ≤ C` holds `μ`-almost everywhere, then
+`ρ(E) ≤ C · μ(E)` for every set `E`. This is the step from
+"pointwise density transport" (manuscript Eq. (eq:ratioBound), pointwise)
+to "event-level density bound" (Eq. (eq:eventBound)). -/
+theorem event_bound_of_rnDeriv_le
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ ρ : Measure Ω) [SigmaFinite μ] [ρ.HaveLebesgueDecomposition μ]
+    (hAC : ρ ≪ μ) (C : ℝ≥0∞)
+    (hBound : ∀ᵐ x ∂μ, ρ.rnDeriv μ x ≤ C)
+    (E : Set Ω) :
+    ρ E ≤ C * μ E := by
+  calc ρ E
+      = ∫⁻ x in E, ρ.rnDeriv μ x ∂μ :=
+        (Measure.setLIntegral_rnDeriv hAC E).symm
+    _ ≤ ∫⁻ _ in E, C ∂μ := by
+        refine setLIntegral_mono_ae aemeasurable_const ?_
+        exact hBound.mono fun _ hx _ => hx
+    _ = C * μ E := setLIntegral_const E C
+
+/-! ### Chained with the union-bound/failure-bound step -/
 
 /-- **Measure-theoretic failure bound.**
 Combines (eq:ratioBound) — the density bound `ρ ≤ C·μ` at the event level
@@ -90,5 +123,30 @@ theorem failure_bound_uniform
         failure_bound_measure_theoretic μ ρ C hDens B hF
     _ ≤ C * ((L : ℝ≥0∞) * q) := mul_le_mul_right hsum C
     _ = C * (L : ℝ≥0∞) * q := (mul_assoc _ _ _).symm
+
+/-- **End-to-end measure-theoretic failure bound.**
+Combines the Radon–Nikodym step (manuscript Eq. (eq:ratioBound),
+pointwise ⟹ event-level) with the union-bound step (eq:union) to give
+Eq. (eq:neqbad):
+
+given `ρ ≪ μ` with `rnDeriv ρ μ ≤ C` μ-a.e., and fault events
+`B : Fin L → Set Ω` covering a failure event `F ⊆ ⋃ᵢ Bᵢ`,
+
+    `ρ(F) ≤ C · ∑ᵢ μ(Bᵢ)`.
+
+The physical input to this chain is just: (i) a pilot-wave transport
+argument that preserves the pointwise density bound on `rnDeriv ρ μ`,
+and (ii) the (A4) assertion that fault events are measurable with Born
+probabilities. Everything else is measure theory. -/
+theorem failure_bound_from_rnDeriv
+    {Ω : Type*} [MeasurableSpace Ω]
+    (μ ρ : Measure Ω) [SigmaFinite μ] [ρ.HaveLebesgueDecomposition μ]
+    (hAC : ρ ≪ μ) (C : ℝ≥0∞)
+    (hBound : ∀ᵐ x ∂μ, ρ.rnDeriv μ x ≤ C)
+    {L : ℕ} (B : Fin L → Set Ω)
+    {F : Set Ω} (hF : F ⊆ ⋃ i, B i) :
+    ρ F ≤ C * ∑ i, μ (B i) :=
+  failure_bound_measure_theoretic μ ρ C
+    (fun E => event_bound_of_rnDeriv_le μ ρ hAC C hBound E) B hF
 
 end Subquantum
