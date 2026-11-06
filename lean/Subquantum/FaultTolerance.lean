@@ -124,10 +124,12 @@ Given:
 * polynomial location count `L > 0`;
 * target failure probability `δ ∈ (0, 1)`,
 
-there exists a concatenation level `k` whose base-2 logarithm is bounded
-by an explicit `O(log n)` quantity and at which the failure upper bound
-`4 L q k / p_*` is at most `δ`. The nonequilibrium cost is `n log 2 + log 4`
-by `R_eq` (independent of `k`). -/
+there exists a concatenation level `k` at which the failure upper bound
+`4 L q k / p_*` is at most `δ`. See `main_fault_tolerance_log_bound`
+below for the quantitative `k = O(log n)` form.
+
+The nonequilibrium cost is `n log 2 + log 4` by `R_eq` (independent
+of `k`). -/
 theorem main_fault_tolerance
     {A q0 : ℝ} (hA : 0 < A) (hq0 : 0 < q0) (hAq0 : A * q0 < 1)
     {L δ : ℝ} (hL : 0 < L) (hδ : 0 < δ)
@@ -155,5 +157,99 @@ theorem main_fault_tolerance
       push_cast
       exact hk.le
   exact ⟨k, failureUpperBound_le_delta hA hq0 hAq0 hL hδ n k hq hq0_eq hrec hk⟩
+
+/-- **Quantitative `k = O(log n)` form of the fault-tolerance theorem.**
+
+Strengthens `main_fault_tolerance` by exhibiting a sufficient `k` for
+which `2^k` is bounded by an explicit *linear* function of `n`. Taking
+`log₂` of that bound shows `k = O(log n)` for any polynomial `L(n)`
+and for fixed `A, q0, δ`, confirming the manuscript's asymptotic
+claim in Eq.~(kbound).
+
+Concretely, with
+`T := (n · log 2 + log(4L/(Aδ))) / (−log(A q0))` and
+`m := ⌈max 0 T⌉ + 1`, the choice `k := Nat.clog 2 m` satisfies
+`2^k ≥ m > T`, which feeds into `failureUpperBound_le_delta` to give
+the δ-bound, and `2^k ≤ 2m ≤ 2(max 0 T + 2)`, i.e. `2^k` is bounded
+by an affine function of `max 0 T`. For polynomial `L(n) = poly(n)`,
+`T = Θ(n)` for large `n`, hence `k ≤ ⌈log₂(2(T+2))⌉ = O(log n)`. -/
+theorem main_fault_tolerance_log_bound
+    {A q0 : ℝ} (hA : 0 < A) (hq0 : 0 < q0) (hAq0 : A * q0 < 1)
+    {L δ : ℝ} (hL : 0 < L) (hδ : 0 < δ)
+    (n : ℕ)
+    {q : ℕ → ℝ} (hq : ∀ j, 0 ≤ q j) (hq0_eq : q 0 = q0)
+    (hrec : ∀ j, q (j + 1) ≤ A * (q j) ^ 2) :
+    ∃ k : ℕ,
+      failureUpperBound L q n k ≤ δ ∧
+      ((2 ^ k : ℕ) : ℝ)
+        ≤ 2 * (max (0 : ℝ)
+                  (((n : ℝ) * Real.log 2 + Real.log (4 * L / (A * δ)))
+                      / (-Real.log (A * q0))) + 2) := by
+  set θ : ℝ := A * q0 with hθ_def
+  have hθ_pos : 0 < θ := mul_pos hA hq0
+  have hlogθ_neg : Real.log θ < 0 := Real.log_neg hθ_pos hAq0
+  have hneg_logθ_pos : 0 < -Real.log θ := neg_pos.mpr hlogθ_neg
+  set T : ℝ :=
+    ((n : ℝ) * Real.log 2 + Real.log (4 * L / (A * δ)))
+      / (-Real.log θ) with hT_def
+  -- Nat.ceil(max 0 T) is a natural number ≥ T; add 1 for strict dominance.
+  set m : ℕ := Nat.ceil (max (0 : ℝ) T) + 1 with hm_def
+  have hm_pos : 1 ≤ m := by
+    rw [hm_def]; exact Nat.succ_le_succ (Nat.zero_le _)
+  -- Choose k := Nat.clog 2 m. Then 2^k ≥ m.
+  refine ⟨Nat.clog 2 m, ?_, ?_⟩
+  · -- failure bound: use failureUpperBound_le_delta with 2^k ≥ T.
+    apply failureUpperBound_le_delta hA hq0 hAq0 hL hδ n _ hq hq0_eq hrec
+    have hT_le_m : T ≤ (m : ℝ) := by
+      rw [hm_def]
+      push_cast
+      have h1 : T ≤ max (0 : ℝ) T := le_max_right _ _
+      have h2 : max (0 : ℝ) T ≤ (Nat.ceil (max (0 : ℝ) T) : ℝ) := Nat.le_ceil _
+      linarith
+    have hm_le_pow : (m : ℝ) ≤ ((2 ^ Nat.clog 2 m : ℕ) : ℝ) := by
+      exact_mod_cast Nat.le_pow_clog (by norm_num : (1 : ℕ) < 2) m
+    exact hT_le_m.trans hm_le_pow
+  · -- upper bound: 2^(clog 2 m) ≤ 2m ≤ 2(T + 2).
+    -- First: 2^(clog 2 m) ≤ 2 * m. By Nat.clog_le_iff_le_pow it suffices
+    -- to show m ≤ 2^k implies the bound; we use the elementary fact that
+    -- for m ≥ 1 the smallest k with 2^k ≥ m satisfies 2^k < 2m.
+    have hclog_pow_le : (2 ^ Nat.clog 2 m : ℕ) ≤ 2 * m := by
+      -- Equivalent: Nat.clog 2 m ≤ Nat.clog 2 (2 * m), and 2 * m = 2^1 * m ≥ 2^k ...
+      -- We prove by cases on m = 1 vs m ≥ 2.
+      rcases Nat.lt_or_ge m 2 with hm_lt | hm_ge
+      · -- m ∈ {0, 1}. m ≥ 1 by hm_pos, so m = 1, clog 2 1 = 0.
+        interval_cases m
+        · simp [Nat.clog]
+      · -- m ≥ 2: clog 2 m ≤ Nat.log 2 m + 1, and 2^(log 2 m) ≤ m, so 2^clog ≤ 2m.
+        have hlog_pow_le : (2 ^ Nat.log 2 m : ℕ) ≤ m :=
+          Nat.pow_log_le_self 2 (Nat.one_le_iff_ne_zero.mp hm_pos)
+        -- Nat.clog_le_iff_le_pow: clog 2 m ≤ Nat.log 2 m + 1 iff m ≤ 2 ^ (Nat.log 2 m + 1).
+        have hclog_le : Nat.clog 2 m ≤ Nat.log 2 m + 1 := by
+          rw [Nat.clog_le_iff_le_pow (by norm_num : (1 : ℕ) < 2)]
+          calc m ≤ 2 * (2 ^ Nat.log 2 m) := by
+                have h2 := hlog_pow_le
+                -- Direct: m < 2 * 2^(log 2 m) is standard; but here we just need ≤.
+                -- Use: m ≤ 2^(⌈log⌉) ≤ 2 * 2^(⌊log⌋).
+                have hmpos : 0 < m := hm_pos
+                have := Nat.lt_pow_succ_log_self (by norm_num : (1 : ℕ) < 2) m
+                omega
+            _ = 2 ^ (Nat.log 2 m + 1) := by
+                rw [pow_succ]; ring
+        calc (2 ^ Nat.clog 2 m : ℕ)
+            ≤ 2 ^ (Nat.log 2 m + 1) := Nat.pow_le_pow_right (by norm_num) hclog_le
+          _ = 2 * 2 ^ Nat.log 2 m := by rw [pow_succ]; ring
+          _ ≤ 2 * m := by exact Nat.mul_le_mul_left 2 hlog_pow_le
+    -- Convert to ℝ and finish.
+    have h1 : ((2 ^ Nat.clog 2 m : ℕ) : ℝ) ≤ (2 * m : ℕ) := by
+      exact_mod_cast hclog_pow_le
+    have h2 : ((2 * m : ℕ) : ℝ) = 2 * (m : ℝ) := by push_cast; ring
+    rw [h2] at h1
+    have h3 : (m : ℝ) ≤ max (0 : ℝ) T + 2 := by
+      rw [hm_def]
+      push_cast
+      have h4 : (Nat.ceil (max (0 : ℝ) T) : ℝ) ≤ max (0 : ℝ) T + 1 :=
+        (Nat.ceil_lt_add_one (le_max_left _ _)).le
+      linarith
+    linarith [mul_le_mul_of_nonneg_left h3 (by norm_num : (0 : ℝ) ≤ 2)]
 
 end Subquantum

@@ -1,10 +1,18 @@
 # License Status
 
-No public reuse license has been selected for this repository.
+This repository is dual-licensed:
 
-Copyright © 2026 Michael A. Stay. All rights reserved unless a later commit adds an explicit license.
+- **Code, configuration, and build files** — Apache License, Version 2.0.
+  See `LICENSE`. This covers `scripts/`, `lean/` (Lean sources), the
+  top-level `Makefile`, and `.github/workflows/`.
+- **Manuscript, notes, and documentation prose** — Creative Commons
+  Attribution 4.0 International (CC BY 4.0). See `LICENSE-MANUSCRIPT`.
+  This covers `manuscript/*.tex`, `notes/`, `README.md`, `CHANGELOG.md`,
+  `CITATION.cff`, and the prose portions of `lean/README.md` /
+  `AGENTS.md`.
 
-Before making the repository public, consider choosing separately:
+Copyright © 2026 Michael A. Stay.
 
-- a document license for the manuscript and notes, such as Creative Commons Attribution 4.0; and
-- a software license for scripts and workflow files, such as MIT, BSD-2-Clause, or Apache-2.0.
+Third-party material (for example `manuscript/sn-jnl.cls`, the Springer
+Nature journal class file) is distributed under its own license as set
+by its author and is not relicensed by the dual-license above.

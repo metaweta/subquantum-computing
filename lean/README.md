@@ -5,7 +5,7 @@ logical, algebraic, and arithmetic skeleton of the manuscript. Physical
 content enters as hypotheses rather than being proved from first
 principles.
 
-## Mapping to manuscript (v0.2, "Robustness transfer and conditional
+## Mapping to manuscript (v0.4, "Robustness transfer and conditional
 ## fault tolerance")
 
 - `Subquantum.Entropy` — `pStar n = (2^n)⁻¹` and
@@ -75,10 +75,16 @@ principles.
     Eq. (eq:kbound), the bound `4 · L · q(k) / p_* ≤ δ` holds.
     Together with Theorem 1 this gives the nonequilibrium failure
     bound of Eq. (eq:neqbad).
-  - `main_fault_tolerance`: existence of such a `k` for every
-    `δ, n`. The explicit `k = O(log n)` statement of the manuscript
-    is not strengthened; existence of a sufficient `k` is proved
-    directly.
+  - `main_fault_tolerance`: existence of a sufficient `k` for every
+    `δ, n`.
+  - `main_fault_tolerance_log_bound`: quantitative `k = O(log n)`
+    form. Exhibits a sufficient `k` with
+    `2^k ≤ 2 · (max 0 T + 2)` where
+    `T = (n·log 2 + log(4L/(Aδ))) / (−log(A·q0))`. Since `T` is
+    linear in `n` (for polynomial `L(n)` and fixed `A, q0, δ`), this
+    bound on `2^k` makes `k = O(log n)` explicit at the level of the
+    formal statement. The construction uses
+    `k := Nat.clog 2 (⌈max 0 T⌉ + 1)`.
 
 ## What is NOT formalized
 
@@ -89,11 +95,24 @@ hypothesis-level:
   flow is used as a hypothesis of Lemma 2 and the pointwise density
   bound of Eq. (eq:ratioBound). The pilot-wave dynamics itself is
   not formalized.
+- The spinor-only pointer-coordinate hypothesis of Section 3 — that
+  the computational register contributes no extra Bohmian
+  configuration coordinate, so `ẏ = J/P` is the full guidance law —
+  is a modeling assumption, not derived in Lean.
+- The derivation of `R = n·log 2 + log 4` as the relative entropy of
+  the explicitly conditioned shell measure is not formalized.
+  `Subquantum.Entropy.R_eq` only simplifies the closed form
+  `log(4/pStar n)`; the identification of that quantity with
+  `D(ρ_{A*} ‖ μ_y)` is manuscript-level.
+- The history-event realizability of `H_dec` and `H_rec` — including
+  the construction of a measurable fault-label map `Λ` and the
+  resulting label-conditional record channels — is a physical
+  hypothesis, not formalized.
 - The conventional fault-tolerance input of Eq. (eq:FTinput) — the
   recursion `q_{j+1} ≤ A q_j²` and the Born-rule failure bound
-  `ε_k(n) ≤ L(n) q_k` — is axiomatic input to Corollary 1. It is
-  justified in the manuscript by citing Aliferis–Gottesman–Preskill,
-  not derived in Lean.
+  `ε_dec,k + ε_rec,k ≤ L(n) q_k` — is axiomatic input to Corollary 1.
+  It is justified in the manuscript by citing
+  Aliferis–Gottesman–Preskill, not derived in Lean.
 - Monotonicity lift from `d(c ‖ p)` to `d(r ‖ p)` on `r ∈ [c, 1]`,
   used in the proof of Lemma 1.
 - The architectural requirements highlighted in the manuscript's

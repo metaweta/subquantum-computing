@@ -83,6 +83,18 @@ Dr. Michael A. Stay
 Computer Science Department, University of Auckland  
 `mike@cs.auckland.ac.nz`
 
-## License status
+## License
 
-No reuse license has yet been selected. Unless and until a license is added, copyright remains with Michael A. Stay and no permission to reuse is implied.
+This repository is dual-licensed:
+
+- Code, configuration, and build files are licensed under the Apache
+  License, Version 2.0 — see `LICENSE`.
+- The manuscript (`manuscript/*.tex`), notes, `README.md`,
+  `CHANGELOG.md`, `CITATION.cff`, and the prose portions of other
+  documentation are licensed under the Creative Commons Attribution
+  4.0 International License (CC BY 4.0) — see `LICENSE-MANUSCRIPT`.
+
+See `LICENSE-STATUS.md` for the full split. Third-party files such as
+`manuscript/sn-jnl.cls` remain under their original licenses.
+
+Copyright © 2026 Michael A. Stay.

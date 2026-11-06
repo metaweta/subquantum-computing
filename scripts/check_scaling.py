@@ -86,24 +86,36 @@ def required_concatenation_level(x: Inputs) -> tuple[int, float]:
     return k, rhs
 
 
-def q_upper_bound(x: Inputs, k: int) -> float:
-    """Return A^{-1}(A q0)^{2**k}, evaluated in log space."""
+def log_q_upper_bound(x: Inputs, k: int) -> float:
+    """Return ln(A^{-1}(A q0)^{2**k}) in natural log, without exponentiating."""
     x.validate()
     if k < 0:
         raise ValueError("k must be nonnegative")
-    log_q = -math.log(x.A) + (2**k) * math.log(x.A * x.q0)
-    return math.exp(log_q)
+    return -math.log(x.A) + (2**k) * math.log(x.A * x.q0)
+
+
+def q_upper_bound(x: Inputs, k: int) -> float:
+    """Return A^{-1}(A q0)^{2**k}.
+
+    May underflow to 0.0 for large n or k. Prefer `log_q_upper_bound`
+    when the result will be re-logged.
+    """
+    return math.exp(log_q_upper_bound(x, k))
+
+
+def log_nonequilibrium_failure_upper_bound(x: Inputs, k: int) -> float:
+    """Return ln(4 L(n) q_k / p_*), computed entirely in log space."""
+    return (
+        math.log(4.0)
+        + log_circuit_size(x)
+        + log_q_upper_bound(x, k)
+        + x.n * math.log(2.0)
+    )
 
 
 def nonequilibrium_failure_upper_bound(x: Inputs, k: int) -> float:
-    """Return 4 L(n) q_k / p_* in log space."""
-    log_bound = (
-        math.log(4.0)
-        + log_circuit_size(x)
-        + math.log(q_upper_bound(x, k))
-        + x.n * math.log(2.0)
-    )
-    return math.exp(log_bound)
+    """Return 4 L(n) q_k / p_*. May underflow for large n or k."""
+    return math.exp(log_nonequilibrium_failure_upper_bound(x, k))
 
 
 def main() -> None:
@@ -139,12 +151,11 @@ def main() -> None:
     )
     print(f"required lower bound on 2^k        = {rhs:.12g}")
     print(f"smallest sufficient k              = {k}")
-    print(f"q_k upper bound                    = {q_upper_bound(x, k):.12g}")
-    print(
-        "nonequilibrium failure upper bound = "
-        f"{nonequilibrium_failure_upper_bound(x, k):.12g}"
-    )
-    print(f"target delta                       = {x.delta:.12g}")
+    log_qk = log_q_upper_bound(x, k)
+    log_failure = log_nonequilibrium_failure_upper_bound(x, k)
+    print(f"ln q_k upper bound                 = {log_qk:.12g}")
+    print(f"ln nonequilibrium failure bound    = {log_failure:.12g}")
+    print(f"ln target delta                    = {math.log(x.delta):.12g}")
 
 
 if __name__ == "__main__":

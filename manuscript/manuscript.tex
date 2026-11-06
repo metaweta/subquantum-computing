@@ -133,6 +133,10 @@ Couple the flag to a one-dimensional pointer coordinate $y$ with initial packet 
 H_M(t)=a(t)Qp_y.
 \label{eq:measurementH}
 \end{equation}
+
+\paragraph{Pointer-only Bohmian configuration.}
+\label{par:spinoronly}
+The guidance law used below is the one-dimensional Bohmian equation $\dot y=J/P$ with $P$ and $J$ the marginal density and current on the pointer coordinate. This is valid when $y$ is the only Bohmian configuration coordinate of the model, so that the computational register carries no additional configuration variables for which the guidance law would depend on the joint density. We therefore take the register to be a spinor-only (internal degrees of freedom only) system, in which the computational basis states $|x\rangle|f(x)\rangle$ differ only in internal indices and share a single pointer coordinate; the pointer is the sole Bohmian configuration variable. In that setting the marginal current and density at $y$ coincide with the full configuration-space current and density, and $\dot Y=J(Y,t)/P(Y,t)$ is the exact Bohmian velocity. If the register is instead modeled with additional configuration coordinates $x$, the actual guidance equation depends on $(x,y)$ and the cumulative-probability conservation argument below does not apply without further hypotheses: for example, when the marked and unmarked computational states have disjoint spatial supports in $x$, conditioning only on a pointer interval does not alter the relative populations of those spatial sectors, so trajectories initially in the unmarked spatial sector would remain there regardless of pointer preparation. Under the stated spinor-only hypothesis this obstruction does not arise, and the arguments of this section go through unchanged.
 Let
 \begin{equation}
 G(t)=\int_0^t a(s)\,ds.
@@ -208,6 +212,10 @@ Lemma 1, applied to the marked-state basin with any fixed target success probabi
 \begin{equation}
 R=\Theta(n).
 \end{equation}
+
+\paragraph{Resource-model caveat.}
+\label{par:resourcecaveat}
+Linear relative entropy does not by itself imply polynomial physical preparation cost. The shell $A_*$ has equilibrium probability $p_*/4$, so producing one shell configuration by ordinary equilibrium rejection sampling would require an expected $4\cdot 2^n$ attempts. The bound in Eq.~\eqref{eq:linearresource} is therefore a specific information-theoretic resource bound, not a complete accounting of the thermodynamic, operational, or computational cost of creating and maintaining the required nonequilibrium ensemble. We retain this caveat throughout: all complexity consequences below are conditional on access to the specified pointer ensemble, and should not be read as implying that such an ensemble can be prepared in polynomial time within any particular physical model.
 
 The exponentially small equilibrium probability need not imply exponentially fine spatial localization. Write the initial survival probability as $S(y)=1-C(y,0)$. Over the relevant tail, take
 \begin{equation}
@@ -339,12 +347,31 @@ If $\sigma_E^{(b)}(t)$ is the ordinary-record state generated from logical value
 \end{equation}
 Equation~\eqref{eq:recordindependence} is equivalent to $\ell_E(t)=0$. More generally, for equal prior probabilities the optimal success probability for distinguishing the two logical values using a measurement on $E$ is $(1+\ell_E(t))/2$. Syndrome information is allowed: the record may depend on which correctable error occurred, provided that information is independent of the encoded logical value.
 
-For the Bohmian robustness theorem we use a stronger but directly usable event-level quantity. Let $H_{\rm rec}\subseteq\Gamma_T$ be a measurable set of histories on which Eq.~\eqref{eq:recordindependence} fails at some pre-readout time, and suppose
+For the Bohmian robustness theorem we use a stronger but directly usable event-level quantity. Equality of two logical-value-dependent channels is not ordinarily a property of a single trajectory, so we define $H_{\rm rec}$ through a stochastic fault label whose conditional record channels can be compared on each trajectory. Suppose the implementation admits a measurable fault-label map
+\begin{equation}
+\Lambda:\Gamma_T\longrightarrow\Omega,
+\label{eq:faultlabel}
+\end{equation}
+where $\Omega$ is a measurable label space (for example, a syndrome history together with any environmental fault records used by the architecture). For each label $\omega\in\Omega$ let $\mathcal R_t^{(\omega)}$ be the conditional record channel from the logical flag to $E$ induced by the subset of implementation histories with $\Lambda=\omega$ up to time $t$. We call a label \emph{record-independent} if
+\begin{equation}
+\mathcal R_t^{(\omega)}\!\left(|0_L\rangle\langle0_L|\right)
+=
+\mathcal R_t^{(\omega)}\!\left(|1_L\rangle\langle1_L|\right)
+\qquad (t<t_{\rm read}),
+\label{eq:labelwiserecordindependence}
+\end{equation}
+and let $\Omega_{\rm leak}\subseteq\Omega$ be the measurable subset of labels for which Eq.~\eqref{eq:labelwiserecordindependence} fails. The record-leakage history event is then
+\begin{equation}
+H_{\rm rec}=\Lambda^{-1}(\Omega_{\rm leak})
+\subseteq\Gamma_T,
+\label{eq:Hrecdef}
+\end{equation}
+which is measurable by construction, and we suppose
 \begin{equation}
 \mathbb P_\mu^T(H_{\rm rec})\le\varepsilon_{\rm rec}.
 \label{eq:recordeventbound}
 \end{equation}
-We call $\varepsilon_{\rm rec}$ the \emph{equilibrium record-leakage probability}. Outside $H_{\rm rec}$ the ordinary records are exactly independent of the marked/unmarked value until the nonequilibrium pointer is coupled. This permits a small amount of leakage without demanding exact independence on every physical history.
+We call $\varepsilon_{\rm rec}$ the \emph{equilibrium record-leakage probability}. Outside $H_{\rm rec}$ every trajectory carries a record-independent label, so the conditional ordinary records are exactly independent of the marked/unmarked value until the nonequilibrium pointer is coupled. This construction converts a channel-level property into a trajectory-level event, as required for the transfer theorem; the Knill--Laflamme structure provides one natural source of record-independent labels, since within the correctable error algebra the syndrome factor is independent of the encoded logical value.
 
 The channel quantity $\ell_E(t)$ and the history probability $\varepsilon_{\rm rec}$ should not be conflated. A small trace distance by itself need not exhibit a measurable Bohmian bad-history set: record differences can be spread weakly across a set of order-one equilibrium measure rather than concentrated on an exceptional set of small path measure. This failure already occurs in the classical special case: two record distributions may differ by an $O(\delta)$ change in density throughout a region of unit measure, giving total-variation distance $O(\delta)$ without any event of measure $O(\delta)$ outside which the two records agree exactly. Conversely, if the physical record state admits a decomposition into a common logical-value-independent part of weight at least $1-\varepsilon_{\rm rec}$ plus a leakage part of weight at most $\varepsilon_{\rm rec}$, then convexity of trace distance gives $\ell_E(t)\le\varepsilon_{\rm rec}$. The main theorem requires the event-level bound in Eq.~\eqref{eq:recordeventbound}; Eq.~\eqref{eq:recordleakage} is an operational diagnostic that can be useful when a concrete model supplies such a decomposition.
 

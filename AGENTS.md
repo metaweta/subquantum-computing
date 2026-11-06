@@ -26,7 +26,7 @@ Preserve these distinctions unless a human-author-approved derivation proves a r
 
 ## Scientific editing rules
 
-- Do not strengthen the theorem beyond assumptions (A1)–(A4).
+- Do not strengthen the theorem beyond its explicit hypotheses. The main robustness result (Theorem 1 / Corollary 1) is conditional on: (i) the spinor-only pointer-coordinate hypothesis of Section 3, (ii) history-event realizability of `H_dec` and `H_rec` on Bohmian trajectory space, and (iii) a conventional Born-rule failure bound `ε_dec,k + ε_rec,k ≤ L(n)·q_k` with below-threshold recursion `q_{j+1} ≤ A·q_j²`. The manuscript also carries a resource-model caveat: linear relative entropy is not the same as polynomial physical preparation cost.
 - Do not remove or soften the generative-AI disclosure.
 - Check every algebraic change independently.
 - Prefer primary sources for citations.
